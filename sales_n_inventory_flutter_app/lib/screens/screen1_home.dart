@@ -1,6 +1,9 @@
 import 'package:fancy_drawer/fancy_drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:sales_n_inventory_flutter_app/app_drawer/drawer.dart';
+import 'package:sales_n_inventory_flutter_app/others/customAppBar.dart';
+import 'package:sales_n_inventory_flutter_app/others/image_assets.dart';
 import 'package:sales_n_inventory_flutter_app/others/notification.dart';
 
 NotifyAlertState myAlert = NotifyAlertState();
@@ -45,43 +48,24 @@ class _HomeScreenState extends State<HomeScreen>
             drawerMenuItems(),
           ],
           child: Scaffold(
-            floatingActionButton: FloatingActionButton(
-              tooltip: "Add New Item",
-              elevation: 5,
-              splashColor: Colors.pink,
-              isExtended: true,
-              onPressed: () {},
-              child: IconButton(
-                icon: Icon(
-                  Icons.add,
-                  size: 30,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            appBar: AppBar(
-              elevation: 4.0,
-              title: Text(
-                "Home",
-                style: TextStyle(color: Colors.black),
-              ),
-              centerTitle: true,
               backgroundColor: Colors.white,
-              leading: IconButton(
-                icon: Icon(
-                  Icons.menu_open,
-                  color: Colors.black,
-                  size: 35,
+              floatingActionButton: FloatingActionButton(
+                tooltip: "Add New Item",
+                elevation: 5,
+                splashColor: Colors.pink,
+                isExtended: true,
+                onPressed: () {},
+                child: IconButton(
+                  icon: Icon(
+                    Icons.add,
+                    size: 30,
+                    color: Colors.white,
+                  ),
                 ),
-                onPressed: () {
-                  _controller.toggle();
-                },
               ),
-            ),
-            body: Column(
-              children: [Text("Body")],
-            ),
-          ),
+              body: Stack(
+                children: [bodyForHome(), customAppBar("Home", _controller)],
+              )),
         ),
       ),
     );
@@ -120,4 +104,63 @@ class _HomeScreenState extends State<HomeScreen>
               ));
     }
   }
+}
+
+Widget bodyForHome() {
+  return ListView(
+    children: [
+      Padding(
+          padding: EdgeInsets.fromLTRB(10, 70, 10, 0),
+          child: Text(
+            "Welcome to Sales & Inventory Management System.",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+                letterSpacing: 2,
+                wordSpacing: 3),
+          )),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          ImageAssets.InventoryLoading(),
+          ImageAssets.InventoryChecking(),
+        ],
+      ),
+      Padding(
+          padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
+          child: Text(
+            "You are Good to go.",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                color: Colors.amber[700],
+                letterSpacing: 1),
+          )),
+      Padding(
+        padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
+        child: ElevatedButton.icon(
+            onPressed: () {},
+            icon: Icon(
+              Feather.check_circle,
+              size: 28,
+            ),
+            label: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: Text(
+                " Goto Inventory",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                    letterSpacing: 1),
+              ),
+            )),
+      ),
+    ],
+  );
 }

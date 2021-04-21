@@ -19,7 +19,7 @@ class NotifyAlertState extends State<NotifyAlert> {
     // TODO: implement initState
     super.initState();
     flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-    var android = new AndroidInitializationSettings('assets/images/app_icon');
+    var android = new AndroidInitializationSettings('@mipmap/launcher_icon');
     var iOS = new IOSInitializationSettings();
     var initSetttings = new InitializationSettings(android: android, iOS: iOS);
     flutterLocalNotificationsPlugin.initialize(initSetttings,
