@@ -3,7 +3,7 @@
     <img alt="Sales-n-Inventory-Management-System" src="https://github.com/saurav0001kumar/Sales-n-Inventory-Management-System/blob/main/sales_n_inventory_flutter_app/assets/images/app_icon.png" height="200" width="200" />
   </a>
 </p>
-<h1 align="center">Sales-n-Inventory Management System</h1>
+<h1 align="center">Sales & Inventory Management System</h1>
 <h5 align="center">Made management of medium-sized shops easier.</h5>
 <p align="center">
     <a href="https://github.com/saurav0001kumar/Sales-n-Inventory-Management-System/blob/main/LICENSE">
