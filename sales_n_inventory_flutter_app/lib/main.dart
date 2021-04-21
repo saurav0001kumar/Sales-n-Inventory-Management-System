@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sales_n_inventory_flutter_app/screens/screen1_home.dart';
+import 'others/notification.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.white,
     statusBarIconBrightness: Brightness.dark,
   ));
+
   runApp(MyApp());
 }
 
@@ -21,6 +22,6 @@ class MyApp extends StatelessWidget {
             fontFamily: 'GoogleSans',
             primarySwatch: Colors.deepPurple,
             accentColor: Colors.deepPurpleAccent),
-        home: HomeScreen());
+        home: NotifyAlert());
   }
 }

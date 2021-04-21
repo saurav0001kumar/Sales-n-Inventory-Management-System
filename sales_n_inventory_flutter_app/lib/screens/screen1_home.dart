@@ -1,6 +1,9 @@
 import 'package:fancy_drawer/fancy_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:sales_n_inventory_flutter_app/app_drawer/drawer.dart';
+import 'package:sales_n_inventory_flutter_app/others/notification.dart';
+
+NotifyAlertState myAlert = NotifyAlertState();
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -21,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen>
       ..addListener(() {
         setState(() {});
       });
+    myAlert.showNotification();
   }
 
   @override
@@ -71,7 +75,6 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
                 onPressed: () {
                   _controller.toggle();
-                  debugPrint(_controller.state.toString());
                 },
               ),
             ),
