@@ -5,8 +5,10 @@ import 'package:sales_n_inventory_flutter_app/app_drawer/drawer.dart';
 import 'package:sales_n_inventory_flutter_app/others/customAppBar.dart';
 import 'package:sales_n_inventory_flutter_app/others/image_assets.dart';
 import 'package:sales_n_inventory_flutter_app/others/notification.dart';
+import 'package:sales_n_inventory_flutter_app/screens/screen2_authType.dart';
 
 NotifyAlertState myAlert = NotifyAlertState();
+FancyDrawerController _controller;
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -17,8 +19,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
-  FancyDrawerController _controller;
-
   @override
   void initState() {
     super.initState();
@@ -49,22 +49,11 @@ class _HomeScreenState extends State<HomeScreen>
           ],
           child: Scaffold(
               backgroundColor: Colors.white,
-              floatingActionButton: FloatingActionButton(
-                tooltip: "Add New Item",
-                elevation: 5,
-                splashColor: Colors.pink,
-                isExtended: true,
-                onPressed: () {},
-                child: IconButton(
-                  icon: Icon(
-                    Icons.add,
-                    size: 30,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
               body: Stack(
-                children: [bodyForHome(), customAppBar("Home", _controller)],
+                children: [
+                  bodyForHome(context),
+                  customAppBar("Home", _controller)
+                ],
               )),
         ),
       ),
@@ -106,21 +95,25 @@ class _HomeScreenState extends State<HomeScreen>
   }
 }
 
-Widget bodyForHome() {
+Widget bodyForHome(context) {
   return ListView(
     children: [
+      SizedBox(
+        height: MediaQuery.of(context).size.height * 0.1,
+      ),
       Padding(
-          padding: EdgeInsets.fromLTRB(10, 70, 10, 0),
+          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
           child: Text(
             "Welcome to Sales & Inventory Management System.",
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w500,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
                 color: Colors.black,
                 letterSpacing: 2,
-                wordSpacing: 3),
+                wordSpacing: 5),
           )),
+      ImageAssets.InventoryBuilding(),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -130,20 +123,23 @@ Widget bodyForHome() {
         ],
       ),
       Padding(
-          padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
           child: Text(
             "You are Good to go.",
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: 12,
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w500,
                 color: Colors.amber[700],
                 letterSpacing: 1),
           )),
       Padding(
-        padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
+        padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
         child: ElevatedButton.icon(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => AuthType()));
+            },
             icon: Icon(
               Feather.check_circle,
               size: 28,

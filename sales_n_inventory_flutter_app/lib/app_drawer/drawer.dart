@@ -38,7 +38,7 @@ Widget drawerMenuItems() {
         ]),
       ),
       Padding(
-        padding: const EdgeInsets.fromLTRB(0, 5, 10, 50),
+        padding: const EdgeInsets.fromLTRB(0, 5, 10, 35),
         child: Row(
           children: [
             Icon(
@@ -72,13 +72,14 @@ Widget drawerMenuItems() {
         ],
       ),
       Padding(
-        padding: const EdgeInsets.fromLTRB(0, 50, 10, 0),
+        padding: const EdgeInsets.fromLTRB(0, 35, 10, 0),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                "Last Updated on :\n2001-01-01 10:15:06 IST",
+                "Inventory".toUpperCase() +
+                    "\nLast Updated on :\n2001-01-01 10:15:06 IST",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 15,

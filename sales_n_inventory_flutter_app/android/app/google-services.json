@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "370292214222",
+    "firebase_url": "https://sales-n-inventory-system-ssvk-default-rtdb.firebaseio.com",
+    "project_id": "sales-n-inventory-system-ssvk",
+    "storage_bucket": "sales-n-inventory-system-ssvk.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:370292214222:android:cdbcabe61635b3f7fc039f",
+        "android_client_info": {
+          "package_name": "ml.saurav0001kumar.sales_n_inventory_flutter_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "370292214222-20pld5il046g00it4mh9r7d2qa9vc610.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqa_QSKTbJS3Zr0bkorxUUP7wIQmbvbFg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "370292214222-20pld5il046g00it4mh9r7d2qa9vc610.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

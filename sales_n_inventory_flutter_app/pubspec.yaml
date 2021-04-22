@@ -29,6 +29,9 @@ dependencies:
   flutter_local_notifications: ^5.0.0+1
   toast: ^0.1.5
   flutter_native_splash: ^1.1.8+4
+  cloud_firestore: any
+  firebase_core: any
+  firebase_auth: any
 
 
   # The following adds the Cupertino Icons font to your application.

@@ -39,4 +39,31 @@ class ImageAssets {
       margin: EdgeInsets.all(0),
     );
   }
+
+  static Widget InventoryBuilding() {
+    var assetImage = AssetImage("assets/images/inventory3.gif");
+    var image = Image(
+      image: assetImage,
+      height: 180,
+      width: 180,
+    );
+    return Container(
+      child: image,
+      margin: EdgeInsets.all(0),
+    );
+  }
+
+  static Widget auth() {
+    var assetImage = AssetImage("assets/images/auth.gif");
+    var image = Image(
+      image: assetImage,
+      height: 210,
+      width: 210,
+    );
+    return Container(
+      child: image,
+      margin: EdgeInsets.all(0),
+    );
+  }
+
 }
