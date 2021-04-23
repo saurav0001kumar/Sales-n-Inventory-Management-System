@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:sales_n_inventory_flutter_app/others/image_assets.dart';
+import 'package:sales_n_inventory_flutter_app/others/otherFunctions.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 var loggedIn;

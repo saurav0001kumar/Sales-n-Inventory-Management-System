@@ -1,28 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:sales_n_inventory_flutter_app/authentication/register_page.dart';
+import 'package:sales_n_inventory_flutter_app/authentication/signin_page.dart';
+import 'package:sales_n_inventory_flutter_app/screens/screen2_authType.dart';
 
-
-class AppBarWithoutDrawer extends StatefulWidget {
+class AppBarForSignUp extends StatefulWidget {
   var appTitle;
 
   var context;
 
-  AppBarWithoutDrawer(this.appTitle, this.context);
+  AppBarForSignUp(this.appTitle, this.context);
 
   @override
   State<StatefulWidget> createState() {
     var appTitle;
-    return AppBarWithoutDrawerState(this.appTitle, this.context);
+    return AppBarForSignUpState(this.appTitle, this.context);
   }
-
 }
 
-class AppBarWithoutDrawerState extends State<AppBarWithoutDrawer> {
+class AppBarForSignUpState extends State<AppBarForSignUp> {
   var appTitle;
 
   var context;
 
-  AppBarWithoutDrawerState(this.appTitle, this.context);
+  AppBarForSignUpState(this.appTitle, this.context);
 
   @override
   Widget build(BuildContext context) {
@@ -57,10 +56,7 @@ class AppBarWithoutDrawerState extends State<AppBarWithoutDrawer> {
                 ),
               ),
               SizedBox(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.25,
+                width: MediaQuery.of(context).size.width * 0.25,
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(10, 35, 5, 10),
@@ -68,15 +64,15 @@ class AppBarWithoutDrawerState extends State<AppBarWithoutDrawer> {
                   alignment: Alignment.centerRight,
                   child: ElevatedButton.icon(
                     icon: Icon(
-                      Icons.person_add_alt,
+                      Icons.login,
                       color: Colors.white,
                     ),
                     onPressed: () {
-                      Navigator.pushReplacement(
-                          context, MaterialPageRoute(builder: (context) =>
-                          RegisterPage()));
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => AuthType()));
                     },
-                    label: Text('Sign Up',
+                    label: Text(
+                      'Sign in',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 15,

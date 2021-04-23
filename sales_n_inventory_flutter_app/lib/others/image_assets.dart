@@ -66,4 +66,18 @@ class ImageAssets {
     );
   }
 
+
+  static Widget authLock() {
+    var assetImage = AssetImage("assets/images/authLock.gif");
+    var image = Image(
+      image: assetImage,
+      height: 50,
+      width: 50,
+    );
+    return Container(
+      child: image,
+      margin: EdgeInsets.all(0),
+    );
+  }
+
 }

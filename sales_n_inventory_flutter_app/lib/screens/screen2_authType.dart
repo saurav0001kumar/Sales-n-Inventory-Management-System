@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sales_n_inventory_flutter_app/authentication/register_page.dart';
 import 'package:sales_n_inventory_flutter_app/authentication/signin_page.dart';
 import 'package:sales_n_inventory_flutter_app/others/appBarWithoutDrawer.dart';
 
@@ -29,7 +30,7 @@ class _AuthTypeState extends State<AuthType>
           body: Stack(
             children: [
               bodyForAuthType(context),
-              appBarWithoutDrawer("Sign in", context)
+              AppBarWithoutDrawer("Sign in", context)
             ],
           )),
     );
