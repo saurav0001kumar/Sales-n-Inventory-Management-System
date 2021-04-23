@@ -4,7 +4,7 @@
   </a>
 </p>
 <h1 align="center">Sales & Inventory Management System</h1>
-<h5 align="center">Made management of medium-sized shops easier.</h5>
+<h5 align="center">Made management of small to medium-sized shops easier.</h5>
 <p align="center">
     <a href="https://github.com/saurav0001kumar/Sales-n-Inventory-Management-System/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-GNU General Public License v3.0-blue.svg" alt="GNU General Public License v3.0" />
