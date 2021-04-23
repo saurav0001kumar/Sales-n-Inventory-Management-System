@@ -1,4 +1,5 @@
 import 'package:fancy_drawer/fancy_drawer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:sales_n_inventory_flutter_app/app_drawer/drawer.dart';
@@ -6,6 +7,7 @@ import 'package:sales_n_inventory_flutter_app/others/customAppBar.dart';
 import 'package:sales_n_inventory_flutter_app/others/image_assets.dart';
 import 'package:sales_n_inventory_flutter_app/others/notification.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen2_authType.dart';
+import 'package:sales_n_inventory_flutter_app/screens/screen3_inventoryHome.dart';
 
 NotifyAlertState myAlert = NotifyAlertState();
 FancyDrawerController _controller;
@@ -27,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen>
       ..addListener(() {
         setState(() {});
       });
+    if(FirebaseAuth.instance.currentUser!=null)
     myAlert.showNotification();
   }
 
@@ -45,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen>
           backgroundColor: Colors.deepPurple,
           controller: _controller,
           drawerItems: <Widget>[
-            drawerMenuItems(),
+            drawerMenuItems(context),
           ],
           child: Scaffold(
               backgroundColor: Colors.white,
@@ -137,8 +140,16 @@ Widget bodyForHome(context) {
         padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
         child: ElevatedButton.icon(
             onPressed: () {
-              Navigator.push(
+              if(FirebaseAuth.instance.currentUser==null)
+              Navigator.pushReplacement(
                   context, MaterialPageRoute(builder: (context) => AuthType()));
+              else {
+                resetFontWeigts();
+                fw_inv=FontWeight.bold;
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(
+                    builder: (context) => InventoryDashboard()));
+              }
             },
             icon: Icon(
               Feather.check_circle,

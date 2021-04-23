@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sales_n_inventory_flutter_app/authentication/register_page.dart';
 import 'package:sales_n_inventory_flutter_app/authentication/signin_page.dart';
 import 'package:sales_n_inventory_flutter_app/others/appBarWithoutDrawer.dart';
 

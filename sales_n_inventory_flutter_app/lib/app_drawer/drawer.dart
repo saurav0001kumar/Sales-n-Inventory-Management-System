@@ -1,6 +1,9 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:sales_n_inventory_flutter_app/screens/screen1_home.dart';
+import 'package:sales_n_inventory_flutter_app/screens/screen3_inventoryHome.dart';
 
 bool isDrawerOpen = false;
 
@@ -11,7 +14,15 @@ FontWeight fw_inv = FontWeight.normal;
 FontWeight fw_about = FontWeight.normal;
 FontWeight fw_info = FontWeight.normal;
 
-Widget drawerMenuItems() {
+void resetFontWeigts() {
+  fw_home = FontWeight.normal;
+  fw_team = FontWeight.normal;
+  fw_inv = FontWeight.normal;
+  fw_about = FontWeight.normal;
+  fw_info = FontWeight.normal;
+}
+
+Widget drawerMenuItems(context) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,7 +35,7 @@ Widget drawerMenuItems() {
             boxBackgroundColor: Colors.deepPurple,
             waveColor: Colors.lightBlueAccent,
             waveDuration: Duration(seconds: 2),
-            loadDuration: Duration(seconds: 6),
+            loadDuration: Duration(seconds: 3),
             loadUntil: 0.999,
             boxHeight: 150,
             boxWidth: 200,
@@ -64,8 +75,24 @@ Widget drawerMenuItems() {
       ),
       Column(
         children: [
-          CustomMenuItems("Home", Icons.home, fw_home),
-          CustomMenuItems("Inventory", Icons.inventory, fw_inv),
+          GestureDetector(
+              onTap: () {
+                resetFontWeigts();
+                fw_home = FontWeight.bold;
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()));
+              },
+              child: CustomMenuItems("Home", Icons.home, fw_home)),
+          GestureDetector(
+              onTap: () {
+                resetFontWeigts();
+                fw_inv = FontWeight.bold;
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => InventoryDashboard()));
+              },
+              child: CustomMenuItems("Inventory", Icons.inventory, fw_inv)),
           CustomMenuItems("Our Team", Icons.people, fw_team),
           CustomMenuItems("About Us", Icons.info, fw_about),
           CustomMenuItems("App Info", Icons.perm_device_info, fw_info)
@@ -78,10 +105,13 @@ Widget drawerMenuItems() {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                "Inventory".toUpperCase() +
-                    "\nLast Updated on :\n2001-01-01 10:15:06 IST",
+                FirebaseAuth.instance.currentUser == null
+                    ? "Inventory".toUpperCase() +
+                        "\nLast Updated on :\n[ Sign in to see last update. ]"
+                    : "Inventory".toUpperCase() +
+                        "\nLast Updated on :\n2001-01-01  10:15:06 IST",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.yellow,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                 ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sales_n_inventory_flutter_app/authentication/register_page.dart';
-
+import 'package:sales_n_inventory_flutter_app/screens/screen1_home.dart';
 
 class AppBarWithoutDrawer extends StatefulWidget {
   var appTitle;
@@ -14,7 +14,6 @@ class AppBarWithoutDrawer extends StatefulWidget {
     var appTitle;
     return AppBarWithoutDrawerState(this.appTitle, this.context);
   }
-
 }
 
 class AppBarWithoutDrawerState extends State<AppBarWithoutDrawer> {
@@ -42,7 +41,8 @@ class AppBarWithoutDrawerState extends State<AppBarWithoutDrawer> {
                     size: 28,
                   ),
                   onTap: () {
-                    Navigator.pop(context);
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()));
                   },
                 ),
               ),
@@ -57,10 +57,7 @@ class AppBarWithoutDrawerState extends State<AppBarWithoutDrawer> {
                 ),
               ),
               SizedBox(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.25,
+                width: MediaQuery.of(context).size.width * 0.25,
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(10, 35, 5, 10),
@@ -73,10 +70,12 @@ class AppBarWithoutDrawerState extends State<AppBarWithoutDrawer> {
                     ),
                     onPressed: () {
                       Navigator.pushReplacement(
-                          context, MaterialPageRoute(builder: (context) =>
-                          RegisterPage()));
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegisterPage()));
                     },
-                    label: Text('Sign Up',
+                    label: Text(
+                      'Sign Up',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 15,

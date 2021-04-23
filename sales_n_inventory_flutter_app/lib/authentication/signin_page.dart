@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:sales_n_inventory_flutter_app/app_drawer/drawer.dart';
 import 'package:sales_n_inventory_flutter_app/others/image_assets.dart';
-import 'package:sales_n_inventory_flutter_app/others/otherFunctions.dart';
+import 'package:sales_n_inventory_flutter_app/screens/screen3_inventoryHome.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 var loggedIn;
@@ -158,7 +159,10 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
           content: Text('Signed in as ${user.email}'),
         ),
       );
-      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>NotifyAlert(_auth.currentUser)));
+      resetFontWeigts();
+      fw_inv = FontWeight.bold;
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => InventoryDashboard()));
     } catch (e) {
       Scaffold.of(context).showSnackBar(
         const SnackBar(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sales_n_inventory_flutter_app/authentication/signin_page.dart';
+import 'package:sales_n_inventory_flutter_app/screens/screen1_home.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen2_authType.dart';
 
 class AppBarForSignUp extends StatefulWidget {
@@ -41,7 +42,8 @@ class AppBarForSignUpState extends State<AppBarForSignUp> {
                     size: 28,
                   ),
                   onTap: () {
-                    Navigator.pop(context);
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()));
                   },
                 ),
               ),
