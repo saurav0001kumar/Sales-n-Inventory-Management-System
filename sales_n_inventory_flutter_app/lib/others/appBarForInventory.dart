@@ -51,6 +51,7 @@ class AppBarForInventoryState extends State<AppBarForInventory> {
                   ),
                   onTap: () {
                     _controller.toggle();
+
                   },
                 ),
               ),
@@ -113,6 +114,7 @@ class AppBarForInventoryState extends State<AppBarForInventory> {
                 backgroundColor: Colors.yellow[100],
                 elevation: 3,
                 onDeleted: () {},
+                useDeleteButtonTooltip: false,
                 deleteIcon: Icon(
                   CupertinoIcons.checkmark_seal_fill,
                   size: 18,

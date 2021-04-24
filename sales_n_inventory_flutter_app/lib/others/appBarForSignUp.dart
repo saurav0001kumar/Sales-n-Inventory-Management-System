@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:sales_n_inventory_flutter_app/authentication/signin_page.dart';
+import 'package:sales_n_inventory_flutter_app/app_drawer/drawer.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen1_home.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen2_authType.dart';
+import 'package:sales_n_inventory_flutter_app/screens/screen3_inventoryHome.dart';
 
 class AppBarForSignUp extends StatefulWidget {
   var appTitle;
@@ -70,8 +72,16 @@ class AppBarForSignUpState extends State<AppBarForSignUp> {
                       color: Colors.white,
                     ),
                     onPressed: () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => AuthType()));
+                      if(FirebaseAuth.instance.currentUser==null)
+                        Navigator.pushReplacement(
+                            context, MaterialPageRoute(builder: (context) => AuthType()));
+                      else {
+                        resetFontWeigts();
+                        fw_inv=FontWeight.bold;
+                        Navigator.pushReplacement(
+                            context, MaterialPageRoute(
+                            builder: (context) => InventoryDashboard()));
+                      }
                     },
                     label: Text(
                       'Sign in',

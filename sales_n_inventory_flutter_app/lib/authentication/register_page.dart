@@ -5,12 +5,11 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:sales_n_inventory_flutter_app/others/appBarForSignUp.dart';
 import 'package:sales_n_inventory_flutter_app/others/image_assets.dart';
 import 'package:sales_n_inventory_flutter_app/others/otherFunctions.dart';
-import 'package:toast/toast.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 // Create a CollectionReference that references the firestore collection
-CollectionReference orgs = FirebaseFirestore.instance.collection('users');
+CollectionReference inv_db = FirebaseFirestore.instance.collection('inventory_db');
 //
 
 class RegisterPage extends StatefulWidget {
@@ -227,7 +226,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future<void> addUser() {
     // Call the user's CollectionReference to add a new user
-    return orgs
+    return inv_db.doc(_emailController.text).collection("user_details")
         .add({
           'email': _emailController.text,
           'name': _nameTC.text,
