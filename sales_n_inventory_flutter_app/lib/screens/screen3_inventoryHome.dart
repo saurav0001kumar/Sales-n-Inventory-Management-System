@@ -7,6 +7,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:sales_n_inventory_flutter_app/app_drawer/drawer.dart';
 import 'package:sales_n_inventory_flutter_app/others/appBarForInventory.dart';
 import 'package:sales_n_inventory_flutter_app/others/floatingActionXS.dart';
+import 'package:sales_n_inventory_flutter_app/others/items_list.dart';
 import 'package:sales_n_inventory_flutter_app/others/notification.dart';
 
 var inStock = FirebaseFirestore.instance
@@ -30,7 +31,8 @@ var emptyStock = FirebaseFirestore.instance
 var recentTransaction = FirebaseFirestore.instance
     .collection('inventory_db')
     .doc(FirebaseAuth.instance.currentUser.email.toString())
-    .collection("products");
+    .collection("products")
+    .where("date_modified", isGreaterThanOrEqualTo: DateTime.now().subtract(Duration(days: 10)));
 
 
 //
@@ -159,65 +161,71 @@ Widget bodyForInventoryDashboard(context) {
       //Products IN STOCK
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 2.5, horizontal: 10),
-        child: Card(
-          elevation: 1,
-          color: Colors.blue[50],
-          child: Container(
-            height: 140,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: Icon(
-                    FontAwesome.shopping_bag,
-                    size: 70,
-                    color: Colors.lightBlue,
-                  ),
-                ),
-                Padding(
+        child: GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => ItemsList("Products in Stock",Colors.indigo)));
+          },
+          child: Card(
+            elevation: 1,
+            color: Colors.blue[50],
+            child: Container(
+              height: 140,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: StreamBuilder<QuerySnapshot>(
-                        stream: inStock.snapshots(includeMetadataChanges: true),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (snapshot.hasError) {
-                            return Center(child: Text('Network Error'));
-                          }
+                    child: Icon(
+                      FontAwesome.shopping_bag,
+                      size: 70,
+                      color: Colors.lightBlue,
+                    ),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: StreamBuilder<QuerySnapshot>(
+                          stream: inStock.snapshots(includeMetadataChanges: true),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (snapshot.hasError) {
+                              return Center(child: Text('Network Error'));
+                            }
 
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Center(child: CircularProgressIndicator())
-                                ]);
-                          }
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Center(child: CircularProgressIndicator())
+                                  ]);
+                            }
 
-                          return RichText(
-                            textAlign: TextAlign.center,
-                            text: TextSpan(
-                                text: snapshot.hasData
-                                    ? snapshot.data.size.toString() + "\n"
-                                    : "0\n",
-                                style: TextStyle(
-                                    color: Colors.blue,
-                                    fontFamily: "GoogleSans",
-                                    fontSize: 37,
-                                    fontWeight: FontWeight.bold),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                      text: "Products in Stock",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.indigo,
-                                          fontFamily: "GoogleSans",
-                                          fontSize: 20)),
-                                ]),
-                          );
-                        })),
-              ],
+                            return RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                  text: snapshot.hasData
+                                      ? snapshot.data.size.toString() + "\n"
+                                      : "0\n",
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      fontFamily: "GoogleSans",
+                                      fontSize: 37,
+                                      fontWeight: FontWeight.bold),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text: "Products in Stock",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.indigo,
+                                            fontFamily: "GoogleSans",
+                                            fontSize: 20)),
+                                  ]),
+                            );
+                          })),
+                ],
+              ),
             ),
           ),
         ),
@@ -226,66 +234,72 @@ Widget bodyForInventoryDashboard(context) {
       // Low Stock
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 2.5, horizontal: 10),
-        child: Card(
-          elevation: 1,
-          color: Colors.yellow[50],
-          child: Container(
-            height: 140,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: Icon(
-                    FontAwesome.shopping_bag,
-                    size: 70,
-                    color: Colors.amber,
-                  ),
-                ),
-                Padding(
+        child: GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => ItemsList("Low Stock Items",Colors.amber[800])));
+          },
+          child: Card(
+            elevation: 1,
+            color: Colors.yellow[50],
+            child: Container(
+              height: 140,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: StreamBuilder<QuerySnapshot>(
-                        stream:
-                            lowStock.snapshots(includeMetadataChanges: true),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (snapshot.hasError) {
-                            return Center(child: Text('Network Error'));
-                          }
+                    child: Icon(
+                      FontAwesome.shopping_bag,
+                      size: 70,
+                      color: Colors.amber,
+                    ),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: StreamBuilder<QuerySnapshot>(
+                          stream:
+                              lowStock.snapshots(includeMetadataChanges: true),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (snapshot.hasError) {
+                              return Center(child: Text('Network Error'));
+                            }
 
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Center(child: CircularProgressIndicator())
-                                ]);
-                          }
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Center(child: CircularProgressIndicator())
+                                  ]);
+                            }
 
-                          return RichText(
-                            textAlign: TextAlign.center,
-                            text: TextSpan(
-                                text: snapshot.hasData
-                                    ? snapshot.data.size.toString() + "\n"
-                                    : "0\n",
-                                style: TextStyle(
-                                    color: Colors.amber,
-                                    fontFamily: "GoogleSans",
-                                    fontSize: 37,
-                                    fontWeight: FontWeight.bold),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                      text: "Low Stock Items",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.amber[800],
-                                          fontFamily: "GoogleSans",
-                                          fontSize: 20)),
-                                ]),
-                          );
-                        })),
-              ],
+                            return RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                  text: snapshot.hasData
+                                      ? snapshot.data.size.toString() + "\n"
+                                      : "0\n",
+                                  style: TextStyle(
+                                      color: Colors.amber,
+                                      fontFamily: "GoogleSans",
+                                      fontSize: 37,
+                                      fontWeight: FontWeight.bold),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text: "Low Stock Items",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.amber[800],
+                                            fontFamily: "GoogleSans",
+                                            fontSize: 20)),
+                                  ]),
+                            );
+                          })),
+                ],
+              ),
             ),
           ),
         ),
@@ -294,66 +308,72 @@ Widget bodyForInventoryDashboard(context) {
       // Out of Stock
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 2.5, horizontal: 10),
-        child: Card(
-          elevation: 1,
-          color: Colors.red[50],
-          child: Container(
-            height: 140,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: Icon(
-                    FontAwesome.shopping_bag,
-                    size: 70,
-                    color: Colors.redAccent,
-                  ),
-                ),
-                Padding(
+        child: GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => ItemsList("Items Out of Stock",Colors.red)));
+          },
+          child: Card(
+            elevation: 1,
+            color: Colors.red[50],
+            child: Container(
+              height: 140,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: StreamBuilder<QuerySnapshot>(
-                        stream:
-                            lowStock.snapshots(includeMetadataChanges: true),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (snapshot.hasError) {
-                            return Center(child: Text('Network Error'));
-                          }
+                    child: Icon(
+                      FontAwesome.shopping_bag,
+                      size: 70,
+                      color: Colors.redAccent,
+                    ),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: StreamBuilder<QuerySnapshot>(
+                          stream:
+                              lowStock.snapshots(includeMetadataChanges: true),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (snapshot.hasError) {
+                              return Center(child: Text('Network Error'));
+                            }
 
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Center(child: CircularProgressIndicator())
-                                ]);
-                          }
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Center(child: CircularProgressIndicator())
+                                  ]);
+                            }
 
-                          return RichText(
-                            textAlign: TextAlign.center,
-                            text: TextSpan(
-                                text: snapshot.hasData
-                                    ? snapshot.data.size.toString() + "\n"
-                                    : "0\n",
-                                style: TextStyle(
-                                    color: Colors.redAccent,
-                                    fontFamily: "GoogleSans",
-                                    fontSize: 37,
-                                    fontWeight: FontWeight.bold),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                      text: "Items Out of Stock",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.red[800],
-                                          fontFamily: "GoogleSans",
-                                          fontSize: 20)),
-                                ]),
-                          );
-                        })),
-              ],
+                            return RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                  text: snapshot.hasData
+                                      ? snapshot.data.size.toString() + "\n"
+                                      : "0\n",
+                                  style: TextStyle(
+                                      color: Colors.redAccent,
+                                      fontFamily: "GoogleSans",
+                                      fontSize: 37,
+                                      fontWeight: FontWeight.bold),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text: "Items Out of Stock",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.red[800],
+                                            fontFamily: "GoogleSans",
+                                            fontSize: 20)),
+                                  ]),
+                            );
+                          })),
+                ],
+              ),
             ),
           ),
         ),
@@ -362,65 +382,71 @@ Widget bodyForInventoryDashboard(context) {
       // Recent Transaction
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 2.5, horizontal: 10),
-        child: Card(
-          elevation: 1,
-          color: Colors.green[50],
-          child: Container(
-            height: 140,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: Icon(
-                    FlutterIcons.track_changes_mdi,
-                    size: 70,
-                    color: Colors.green,
-                  ),
-                ),
-                Padding(
+        child: GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => ItemsList("Recently Updated Items",Colors.teal)));
+          },
+          child: Card(
+            elevation: 1,
+            color: Colors.green[50],
+            child: Container(
+              height: 140,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: StreamBuilder<QuerySnapshot>(
-                        stream: recentTransaction.snapshots(includeMetadataChanges: true),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (snapshot.hasError) {
-                            return Center(child: Text('Network Error'));
-                          }
+                    child: Icon(
+                      FlutterIcons.track_changes_mdi,
+                      size: 70,
+                      color: Colors.green,
+                    ),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: StreamBuilder<QuerySnapshot>(
+                          stream: recentTransaction.snapshots(includeMetadataChanges: true),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (snapshot.hasError) {
+                              return Center(child: Text('Network Error'));
+                            }
 
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Center(child: CircularProgressIndicator())
-                                ]);
-                          }
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Center(child: CircularProgressIndicator())
+                                  ]);
+                            }
 
-                          return RichText(
-                            textAlign: TextAlign.center,
-                            text: TextSpan(
-                                text: snapshot.hasData
-                                    ? snapshot.data.size.toString() + "\n"
-                                    : "0\n",
-                                style: TextStyle(
-                                    color: Colors.green,
-                                    fontFamily: "GoogleSans",
-                                    fontSize: 37,
-                                    fontWeight: FontWeight.bold),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                      text: "Recently Updated\nItems",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.teal,
-                                          fontFamily: "GoogleSans",
-                                          fontSize: 20)),
-                                ]),
-                          );
-                        })),
-              ],
+                            return RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                  text: snapshot.hasData
+                                      ? snapshot.data.size.toString() + "\n"
+                                      : "0\n",
+                                  style: TextStyle(
+                                      color: Colors.green,
+                                      fontFamily: "GoogleSans",
+                                      fontSize: 37,
+                                      fontWeight: FontWeight.bold),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text: "Recently Updated\nItems",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.teal,
+                                            fontFamily: "GoogleSans",
+                                            fontSize: 20)),
+                                  ]),
+                            );
+                          })),
+                ],
+              ),
             ),
           ),
         ),
