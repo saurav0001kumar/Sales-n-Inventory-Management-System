@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen1_home.dart';
+import 'package:sales_n_inventory_flutter_app/screens/screen2_authType.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen3_inventoryHome.dart';
 
 bool isDrawerOpen = false;
@@ -85,12 +86,19 @@ Widget drawerMenuItems(context) {
               child: CustomMenuItems("Home", Icons.home, fw_home)),
           GestureDetector(
               onTap: () {
-                resetFontWeigts();
-                fw_inv = FontWeight.bold;
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => InventoryDashboard()));
+                if (FirebaseAuth.instance.currentUser != null) {
+                  resetFontWeigts();
+                  fw_inv = FontWeight.bold;
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => InventoryDashboard()));
+                } else {
+                  resetFontWeigts();
+                  fw_home = FontWeight.bold;
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => AuthType()));
+                }
               },
               child: CustomMenuItems("Inventory", Icons.inventory, fw_inv)),
           CustomMenuItems("Our Team", Icons.people, fw_team),
