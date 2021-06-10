@@ -32,8 +32,8 @@ var recentTransaction = FirebaseFirestore.instance
     .collection('inventory_db')
     .doc(FirebaseAuth.instance.currentUser.email.toString())
     .collection("products")
-    .where("date_modified", isGreaterThanOrEqualTo: DateTime.now().subtract(Duration(days: 10)));
-
+    .where("date_modified",
+        isGreaterThanOrEqualTo: DateTime.now().subtract(Duration(days: 10)));
 
 //
 
@@ -162,9 +162,12 @@ Widget bodyForInventoryDashboard(context) {
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 2.5, horizontal: 10),
         child: GestureDetector(
-          onTap: (){
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => ItemsList("Products in Stock",Colors.indigo)));
+          onTap: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ItemsList("Products in Stock", Colors.indigo, Colors.lightBlue)));
           },
           child: Card(
             elevation: 1,
@@ -186,7 +189,8 @@ Widget bodyForInventoryDashboard(context) {
                   Padding(
                       padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                       child: StreamBuilder<QuerySnapshot>(
-                          stream: inStock.snapshots(includeMetadataChanges: true),
+                          stream:
+                              inStock.snapshots(includeMetadataChanges: true),
                           builder: (BuildContext context,
                               AsyncSnapshot<QuerySnapshot> snapshot) {
                             if (snapshot.hasError) {
@@ -235,9 +239,12 @@ Widget bodyForInventoryDashboard(context) {
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 2.5, horizontal: 10),
         child: GestureDetector(
-          onTap: (){
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => ItemsList("Low Stock Items",Colors.amber[800])));
+          onTap: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ItemsList("Low Stock Items", Colors.amber[800], Colors.amber)));
           },
           child: Card(
             elevation: 1,
@@ -309,9 +316,12 @@ Widget bodyForInventoryDashboard(context) {
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 2.5, horizontal: 10),
         child: GestureDetector(
-          onTap: (){
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => ItemsList("Items Out of Stock",Colors.red)));
+          onTap: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ItemsList("Items Out of Stock", Colors.red[800], Colors.redAccent)));
           },
           child: Card(
             elevation: 1,
@@ -383,9 +393,12 @@ Widget bodyForInventoryDashboard(context) {
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 2.5, horizontal: 10),
         child: GestureDetector(
-          onTap: (){
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => ItemsList("Recently Updated Items",Colors.teal)));
+          onTap: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ItemsList("Recently Updated Items", Colors.teal, Colors.green)));
           },
           child: Card(
             elevation: 1,
@@ -407,7 +420,8 @@ Widget bodyForInventoryDashboard(context) {
                   Padding(
                       padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                       child: StreamBuilder<QuerySnapshot>(
-                          stream: recentTransaction.snapshots(includeMetadataChanges: true),
+                          stream: recentTransaction.snapshots(
+                              includeMetadataChanges: true),
                           builder: (BuildContext context,
                               AsyncSnapshot<QuerySnapshot> snapshot) {
                             if (snapshot.hasError) {
@@ -465,7 +479,8 @@ Widget bodyForInventoryDashboard(context) {
                   fontWeight: FontWeight.bold),
               children: <TextSpan>[
                 TextSpan(
-                  text: "To increase/decrease the quantity of existing items in inventory,\nplease click on the respective cards above.",
+                  text:
+                      "To increase/decrease the quantity of existing items in inventory,\nplease click on the respective cards above.",
                   style: TextStyle(
                       color: Colors.redAccent,
                       fontFamily: "GoogleSans",
@@ -475,7 +490,6 @@ Widget bodyForInventoryDashboard(context) {
               ]),
         ),
       ),
-
 
       SizedBox(
         height: MediaQuery.of(context).size.height * 0.12,
