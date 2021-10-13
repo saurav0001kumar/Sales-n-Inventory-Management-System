@@ -6,8 +6,6 @@ import 'package:sales_n_inventory_flutter_app/others/appBarForSignUp.dart';
 import 'package:sales_n_inventory_flutter_app/others/image_assets.dart';
 import 'package:sales_n_inventory_flutter_app/others/otherFunctions.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
-
 // Create a CollectionReference that references the firestore collection
 CollectionReference inv_db = FirebaseFirestore.instance.collection('inventory_db');
 //
@@ -232,6 +230,7 @@ class _RegisterPageState extends State<RegisterPage> {
           'name': _nameTC.text,
           'phone': _phoneTC.text,
           'shop_name': _shop_nameTC.text,
+      'inventory_last_updated_on': DateTime.now(),
         })
         .then((value) => print("User Added"))
         .catchError((error) => toastAlert("Sign Up Failed! : $error", context));
@@ -239,7 +238,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // Code for registration.
   Future<void> _register() async {
-    final User user = (await _auth.createUserWithEmailAndPassword(
+    final User user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: _emailController.text,
       password: _passwordController.text,
     ))

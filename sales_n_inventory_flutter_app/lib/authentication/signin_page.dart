@@ -1,12 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sales_n_inventory_flutter_app/app_drawer/drawer.dart';
 import 'package:sales_n_inventory_flutter_app/others/image_assets.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen3_inventoryHome.dart';
-
-final FirebaseAuth _auth = FirebaseAuth.instance;
-var loggedIn;
 
 class SignInPage extends StatefulWidget {
   @override
@@ -28,7 +27,28 @@ class _SignInPageState extends State<SignInPage> {
 
   // Code for sign out.
   Future<void> _signOut() async {
-    await _auth.signOut();
+
+    await FirebaseFirestore.instance.clearPersistence();
+    await _deleteAppDir(); _deleteCacheDir();
+    await FirebaseAuth.instance.signOut();
+  }
+}
+
+/// this will delete cache
+Future<void> _deleteCacheDir() async {
+  final cacheDir = await getTemporaryDirectory();
+
+  if (cacheDir.existsSync()) {
+    cacheDir.deleteSync(recursive: true);
+  }
+}
+
+/// this will delete app's storage
+Future<void> _deleteAppDir() async {
+  final appDir = await getApplicationSupportDirectory();
+
+  if(appDir.existsSync()){
+    appDir.deleteSync(recursive: true);
   }
 }
 
@@ -148,7 +168,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
   // Example code of how to sign in with email and password.
   Future<void> _signInWithEmailAndPassword() async {
     try {
-      final User user = (await _auth.signInWithEmailAndPassword(
+      final User user = (await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       ))

@@ -9,6 +9,8 @@ import 'package:sales_n_inventory_flutter_app/others/appBarForInventory.dart';
 import 'package:sales_n_inventory_flutter_app/others/floatingActionXS.dart';
 import 'package:sales_n_inventory_flutter_app/others/items_list.dart';
 import 'package:sales_n_inventory_flutter_app/others/notification.dart';
+import 'package:sales_n_inventory_flutter_app/screens/screen4_addNewProduct.dart';
+import 'package:sales_n_inventory_flutter_app/screens/sreen5_removeExistingProduct.dart';
 
 var inStock = FirebaseFirestore.instance
     .collection('inventory_db')
@@ -36,7 +38,7 @@ var recentTransaction = FirebaseFirestore.instance
         isGreaterThanOrEqualTo: DateTime.now().subtract(Duration(days: 10)));
 
 //
-
+var InStocks = 0, OutStocks = 0;
 //
 
 NotifyAlertState myAlert = NotifyAlertState();
@@ -85,6 +87,7 @@ class _InventoryDashboardState extends State<InventoryDashboard>
                   FloatingActionButtonLocation.endFloat,
 
               //Init Floating Action Bubble
+
               floatingActionButton: HawkFabMenu(
                   blur: 0,
                   icon: AnimatedIcons.menu_close,
@@ -93,14 +96,26 @@ class _InventoryDashboardState extends State<InventoryDashboard>
                   items: [
                     HawkFabMenuItem(
                       label: 'Add New Product',
-                      ontap: () {},
+                      ontap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    addNewProductScreen(InStocks + OutStocks)));
+                      },
                       icon: Icon(Icons.add_shopping_cart),
                       labelColor: Colors.white,
                       labelBackgroundColor: Colors.blue,
                     ),
                     HawkFabMenuItem(
                       label: "Remove Existing Product",
-                      ontap: () {},
+                      ontap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    removeExistingProductScreen()));
+                      },
                       icon: Icon(Icons.remove_shopping_cart),
                     ),
                   ],
@@ -166,8 +181,8 @@ Widget bodyForInventoryDashboard(context) {
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        ItemsList("Products in Stock", Colors.indigo, Colors.lightBlue)));
+                    builder: (context) => ItemsList(
+                        "Products in Stock", Colors.indigo, Colors.lightBlue)));
           },
           child: Card(
             elevation: 1,
@@ -205,7 +220,7 @@ Widget bodyForInventoryDashboard(context) {
                                     Center(child: CircularProgressIndicator())
                                   ]);
                             }
-
+                            InStocks = snapshot.data.size;
                             return RichText(
                               textAlign: TextAlign.center,
                               text: TextSpan(
@@ -243,8 +258,8 @@ Widget bodyForInventoryDashboard(context) {
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        ItemsList("Low Stock Items", Colors.amber[800], Colors.amber)));
+                    builder: (context) => ItemsList(
+                        "Low Stock Items", Colors.amber[800], Colors.amber)));
           },
           child: Card(
             elevation: 1,
@@ -320,8 +335,8 @@ Widget bodyForInventoryDashboard(context) {
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        ItemsList("Items Out of Stock", Colors.red[800], Colors.redAccent)));
+                    builder: (context) => ItemsList("Items Out of Stock",
+                        Colors.red[800], Colors.redAccent)));
           },
           child: Card(
             elevation: 1,
@@ -343,8 +358,8 @@ Widget bodyForInventoryDashboard(context) {
                   Padding(
                       padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                       child: StreamBuilder<QuerySnapshot>(
-                          stream:
-                              lowStock.snapshots(includeMetadataChanges: true),
+                          stream: emptyStock.snapshots(
+                              includeMetadataChanges: true),
                           builder: (BuildContext context,
                               AsyncSnapshot<QuerySnapshot> snapshot) {
                             if (snapshot.hasError) {
@@ -359,7 +374,7 @@ Widget bodyForInventoryDashboard(context) {
                                     Center(child: CircularProgressIndicator())
                                   ]);
                             }
-
+                            OutStocks = snapshot.data.size;
                             return RichText(
                               textAlign: TextAlign.center,
                               text: TextSpan(
@@ -397,8 +412,8 @@ Widget bodyForInventoryDashboard(context) {
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        ItemsList("Recently Updated Items", Colors.teal, Colors.green)));
+                    builder: (context) => ItemsList(
+                        "Recently Updated Items", Colors.teal, Colors.green)));
           },
           child: Card(
             elevation: 1,
