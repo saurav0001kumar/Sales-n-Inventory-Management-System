@@ -61,6 +61,35 @@ class _InventoryDashboardState extends State<InventoryDashboard>
       ..addListener(() {
         setState(() {});
       });
+    //
+    setState(() {
+      inStock = FirebaseFirestore.instance
+          .collection('inventory_db')
+          .doc(FirebaseAuth.instance.currentUser.email.toString())
+          .collection("products")
+          .where("quantity", isGreaterThan: 0);
+
+      lowStock = FirebaseFirestore.instance
+          .collection('inventory_db')
+          .doc(FirebaseAuth.instance.currentUser.email.toString())
+          .collection("products")
+          .where("quantity", isLessThan: 5, isGreaterThan: 0);
+
+      emptyStock = FirebaseFirestore.instance
+          .collection('inventory_db')
+          .doc(FirebaseAuth.instance.currentUser.email.toString())
+          .collection("products")
+          .where("quantity", isLessThanOrEqualTo: 0);
+
+      recentTransaction = FirebaseFirestore.instance
+          .collection('inventory_db')
+          .doc(FirebaseAuth.instance.currentUser.email.toString())
+          .collection("products")
+          .where("date_modified",
+              isGreaterThanOrEqualTo:
+                  DateTime.now().subtract(Duration(days: 10)));
+    });
+    //
     if (FirebaseAuth.instance.currentUser != null) myAlert.showNotification();
   }
 
