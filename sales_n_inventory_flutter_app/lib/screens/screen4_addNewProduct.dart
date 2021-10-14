@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sales_n_inventory_flutter_app/others/otherFunctions.dart';
 
-
 // Create a CollectionReference that references the firestore collection
 CollectionReference inv_db =
     FirebaseFirestore.instance.collection('inventory_db');
@@ -118,6 +117,7 @@ class addNewProductScreenState extends State<addNewProductScreen> {
             child: TextFormField(
               controller: item_nameTC,
               keyboardType: TextInputType.text,
+              textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 labelText: 'Product Name',
                 border:
@@ -136,6 +136,7 @@ class addNewProductScreenState extends State<addNewProductScreen> {
             child: TextFormField(
               controller: categoryTC,
               keyboardType: TextInputType.text,
+              textCapitalization: TextCapitalization.words,
               decoration: InputDecoration(
                 labelText: 'Product Category',
                 border:
@@ -154,6 +155,7 @@ class addNewProductScreenState extends State<addNewProductScreen> {
             child: TextFormField(
               controller: brandTC,
               keyboardType: TextInputType.text,
+              textCapitalization: TextCapitalization.words,
               decoration: InputDecoration(
                 labelText: 'Product Brand',
                 border:
@@ -227,7 +229,8 @@ class addNewProductScreenState extends State<addNewProductScreen> {
     return inv_db
         .doc(FirebaseAuth.instance.currentUser.email.toString())
         .collection("products")
-        .add({
+        .doc(item_nameTC.text)
+        .set({
       'item_name': item_nameTC.text,
       'category': categoryTC.text,
       'brand': brandTC.text,
@@ -236,9 +239,8 @@ class addNewProductScreenState extends State<addNewProductScreen> {
       'date_modified': DateTime.now(),
       'recently_added_items': int.parse(quantityTC.text),
     }).then((value) {
-      //inventory_last_updated_on();
+      inventory_last_updated_on();
       setState(() {
-        
         toastAlert("Transaction Successful!", context);
         resetFields();
       });
@@ -257,11 +259,14 @@ class addNewProductScreenState extends State<addNewProductScreen> {
       quantityTC.clear();
     });
   }
-  // Future<void> inventory_last_updated_on(){
-  //   return inv_db
-  //       .doc(FirebaseAuth.instance.currentUser.email.toString()).collection("user_details").doc()
-  //       .update({'inventory_last_updated_on': DateTime.now()})
-  //       .then((value) => print("Inventory Last Date Updated"))
-  //       .catchError((error) => print("Failed to update modified date: $error"));
-  // }
+
+  Future<void> inventory_last_updated_on() {
+    return inv_db
+        .doc(FirebaseAuth.instance.currentUser.email.toString())
+        .collection("user_details")
+        .doc(FirebaseAuth.instance.currentUser.email.toString())
+        .update({'inventory_last_updated_on': DateTime.now()})
+        .then((value) => print("Inventory Last Date Updated"))
+        .catchError((error) => print("Failed to update modified date: $error"));
+  }
 }

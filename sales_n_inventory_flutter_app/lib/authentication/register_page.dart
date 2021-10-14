@@ -224,8 +224,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future<void> addUser() {
     // Call the user's CollectionReference to add a new user
-    return inv_db.doc(_emailController.text).collection("user_details")
-        .add({
+    return inv_db.doc(_emailController.text).collection("user_details").doc(_emailController.text)
+        .set({
           'email': _emailController.text,
           'name': _nameTC.text,
           'phone': _phoneTC.text,

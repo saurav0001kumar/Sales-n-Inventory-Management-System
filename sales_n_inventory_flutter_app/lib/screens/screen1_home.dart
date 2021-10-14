@@ -6,11 +6,9 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:sales_n_inventory_flutter_app/app_drawer/drawer.dart';
 import 'package:sales_n_inventory_flutter_app/others/customAppBar.dart';
 import 'package:sales_n_inventory_flutter_app/others/image_assets.dart';
-import 'package:sales_n_inventory_flutter_app/others/notification.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen2_authType.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen3_inventoryHome.dart';
 
-NotifyAlertState myAlert = NotifyAlertState();
 FancyDrawerController _controller;
 
 String inventoryLastUpdate;
@@ -33,12 +31,7 @@ class _HomeScreenState extends State<HomeScreen>
         setState(() {});
       });
 
-    setState(() {
-
-    });
-
-    if(FirebaseAuth.instance.currentUser!=null)
-    myAlert.showNotification();
+    setState(() {});
   }
 
   @override
@@ -148,15 +141,16 @@ Widget bodyForHome(context) {
         padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
         child: ElevatedButton.icon(
             onPressed: () {
-              if(FirebaseAuth.instance.currentUser==null)
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => AuthType()));
+              if (FirebaseAuth.instance.currentUser == null)
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => AuthType()));
               else {
                 resetFontWeigts();
-                fw_inv=FontWeight.bold;
+                fw_inv = FontWeight.bold;
                 Navigator.pushReplacement(
-                    context, MaterialPageRoute(
-                    builder: (context) => InventoryDashboard()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => InventoryDashboard()));
               }
             },
             icon: Icon(

@@ -1,36 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sales_n_inventory_flutter_app/others/appBarForList.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen3_inventoryHome.dart';
-
-//
-var inStock = FirebaseFirestore.instance
-    .collection('inventory_db')
-    .doc(FirebaseAuth.instance.currentUser.email.toString())
-    .collection("products")
-    .where("quantity", isGreaterThan: 0);
-
-var lowStock = FirebaseFirestore.instance
-    .collection('inventory_db')
-    .doc(FirebaseAuth.instance.currentUser.email.toString())
-    .collection("products")
-    .where("quantity", isLessThan: 5, isGreaterThan: 0);
-
-var emptyStock = FirebaseFirestore.instance
-    .collection('inventory_db')
-    .doc(FirebaseAuth.instance.currentUser.email.toString())
-    .collection("products")
-    .where("quantity", isLessThanOrEqualTo: 0);
-
-var recentTransaction = FirebaseFirestore.instance
-    .collection('inventory_db')
-    .doc(FirebaseAuth.instance.currentUser.email.toString())
-    .collection("products")
-    .where("date_modified",
-    isGreaterThanOrEqualTo: DateTime.now().subtract(Duration(days: 10)));
-//
+import 'package:sales_n_inventory_flutter_app/screens/screen6_ItemEdit.dart';
 
 class ItemsList extends StatefulWidget {
   var appBarTitle;
@@ -39,11 +12,13 @@ class ItemsList extends StatefulWidget {
 
   var color2;
 
-  ItemsList(this.appBarTitle, this.color1, this.color2);
+  var stock;
+
+  ItemsList(this.appBarTitle, this.color1, this.color2, this.stock);
 
   @override
   State<StatefulWidget> createState() =>
-      ItemsListState(this.appBarTitle, this.color1, this.color2);
+      ItemsListState(this.appBarTitle, this.color1, this.color2, this.stock);
 }
 
 class ItemsListState extends State<ItemsList> {
@@ -53,7 +28,9 @@ class ItemsListState extends State<ItemsList> {
 
   var color2;
 
-  ItemsListState(this.appBarTitle, this.color1, this.color2);
+  var stock;
+
+  ItemsListState(this.appBarTitle, this.color1, this.color2, this.stock);
 
   @override
   void initState() {
@@ -85,19 +62,16 @@ class ItemsListState extends State<ItemsList> {
   Widget bodyForItemsList(context) {
     return ListView(children: [
       SizedBox(
-        height: MediaQuery
-            .of(context)
-            .size
-            .height * 0.1,
+        height: MediaQuery.of(context).size.height * 0.1,
       ),
       Column(children: [
-
         StreamBuilder<QuerySnapshot>(
-            stream: inStock.snapshots(),
-            builder: (BuildContext context,
-                AsyncSnapshot<QuerySnapshot> snapshot) {
+            stream: stock.snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {
-                return Center(child: Padding(
+                return Center(
+                    child: Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: Text('Something went wrong'),
                 ));
@@ -112,29 +86,153 @@ class ItemsListState extends State<ItemsList> {
               if (!snapshot.hasData)
                 return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [Center(child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Text("No Data"),
-                    ))]);
+                    children: [
+                      Center(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text("No Data"),
+                      ))
+                    ]);
 
-              return new Column(
-                children: snapshot.data.docs.map((DocumentSnapshot document) {
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                    child: Card(
+              return Column(
+                children: [
+                  Card(
+                    child: Container(
+                      height: 70,
                       child: Column(
                         children: [
-
-
-
+                          Text(
+                            snapshot.data.size.toString(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 28,
+                                color: color2),
+                          ),
+                          Text(
+                            "  " + appBarTitle + "  ",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                  );
-                }).toList(),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  new Column(
+                    children: snapshot.data.docs.map((DocumentSnapshot d) {
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                        child: Card(
+                          elevation: 1,
+                          color: d.data()['quantity'] > 5
+                              ? Colors.lightBlue[50]
+                              : (d.data()['quantity'] <= 0
+                                  ? Colors.red[50]
+                                  : Colors.amber[50]),
+                          child: ListTile(
+                            title: Text(
+                              d.data()['item_name'],
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18),
+                            ),
+                            trailing: GestureDetector(
+                                onTap: () {
+                                  //to edit item
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => editItem(d.data(), d.id)));
+                                },
+                                child: Chip(
+                                  elevation: 1,
+                                  backgroundColor: Colors.white,
+                                  label: Text("Edit"),
+                                  avatar: Icon(Icons.edit, color: Colors.amber),
+                                )),
+                            subtitle: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Category: ",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                    ),
+                                    Text(
+                                      d.data()['category'],
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Brand: ",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                    ),
+                                    Text(
+                                      d.data()['brand'],
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Rate (INR): ",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                    ),
+                                    Text(
+                                      "₹ " +
+                                          d.data()['price_per_item'].toString(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Quantity: ",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                    ),
+                                    Text(
+                                      d.data()['quantity'].toString(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                ],
               );
             }),
-
       ]),
     ]);
   }

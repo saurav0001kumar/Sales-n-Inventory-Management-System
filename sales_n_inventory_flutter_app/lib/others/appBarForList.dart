@@ -44,8 +44,10 @@ class AppBarForListState extends State<AppBarForList> {
                     size: 28,
                   ),
                   onTap: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => InventoryDashboard()));
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => InventoryDashboard()));
                   },
                 ),
               ),
@@ -55,7 +57,10 @@ class AppBarForListState extends State<AppBarForList> {
                   child: Text(
                     appTitle,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: color1, fontSize: 20, fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                        color: color1,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500),
                   ),
                 ),
               ),

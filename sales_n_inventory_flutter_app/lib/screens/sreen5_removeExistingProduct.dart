@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:sales_n_inventory_flutter_app/authentication/register_page.dart';
 import 'package:sales_n_inventory_flutter_app/others/otherFunctions.dart';
 
@@ -268,16 +267,19 @@ class removeExistingProductScreenState
         .doc(id)
         .delete()
         .then((value) {
+      inventory_last_updated_on();
       toastAlert("'${itemName}'" + " removed successfully!", context);
       print(id + " deleted successfully");
     }).catchError((error) => print("Failed to delete product: $error"));
   }
 
-// Future<void> inventory_last_updated_on() {
-//   return inv_db
-//       .doc(FirebaseAuth.instance.currentUser.email.toString())
-//       .update({'inventory_last_updated_on': DateTime.now()})
-//       .then((value) => print("Inventory Last Date Updated"))
-//       .catchError((error) => print("Failed to update modified date: $error"));
-// }
+  Future<void> inventory_last_updated_on() {
+    return inv_db
+        .doc(FirebaseAuth.instance.currentUser.email.toString())
+        .collection("user_details")
+        .doc(FirebaseAuth.instance.currentUser.email.toString())
+        .update({'inventory_last_updated_on': DateTime.now()})
+        .then((value) => print("Inventory Last Date Updated"))
+        .catchError((error) => print("Failed to update modified date: $error"));
+  }
 }

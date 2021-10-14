@@ -8,8 +8,6 @@ import 'package:sales_n_inventory_flutter_app/app_drawer/drawer.dart';
 import 'package:sales_n_inventory_flutter_app/others/appBarForInventory.dart';
 import 'package:sales_n_inventory_flutter_app/others/floatingActionXS.dart';
 import 'package:sales_n_inventory_flutter_app/others/items_list.dart';
-import 'package:sales_n_inventory_flutter_app/others/notification.dart';
-import 'package:sales_n_inventory_flutter_app/screens/screen1_home.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen4_addNewProduct.dart';
 import 'package:sales_n_inventory_flutter_app/screens/sreen5_removeExistingProduct.dart';
 
@@ -35,6 +33,7 @@ var recentTransaction = FirebaseFirestore.instance
     .collection('inventory_db')
     .doc(FirebaseAuth.instance.currentUser.email.toString())
     .collection("products")
+    .orderBy("date_modified", descending: true)
     .where("date_modified",
         isGreaterThanOrEqualTo: DateTime.now().subtract(Duration(days: 10)));
 
@@ -42,7 +41,6 @@ var recentTransaction = FirebaseFirestore.instance
 var InStocks = 0, OutStocks = 0;
 //
 
-NotifyAlertState myAlert = NotifyAlertState();
 FancyDrawerController _controller;
 
 class InventoryDashboard extends StatefulWidget {
@@ -86,12 +84,12 @@ class _InventoryDashboardState extends State<InventoryDashboard>
           .collection('inventory_db')
           .doc(FirebaseAuth.instance.currentUser.email.toString())
           .collection("products")
+          .orderBy("date_modified", descending: true)
           .where("date_modified",
               isGreaterThanOrEqualTo:
                   DateTime.now().subtract(Duration(days: 10)));
     });
     //
-    if (FirebaseAuth.instance.currentUser != null) myAlert.showNotification();
   }
 
   @override
@@ -211,8 +209,8 @@ Widget bodyForInventoryDashboard(context) {
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ItemsList(
-                        "Products in Stock", Colors.indigo, Colors.lightBlue)));
+                    builder: (context) => ItemsList("Products in Stock",
+                        Colors.indigo, Colors.lightBlue, inStock)));
           },
           child: Card(
             elevation: 1,
@@ -288,8 +286,8 @@ Widget bodyForInventoryDashboard(context) {
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ItemsList(
-                        "Low Stock Items", Colors.amber[800], Colors.amber)));
+                    builder: (context) => ItemsList("Low Stock Items",
+                        Colors.amber[800], Colors.amber, lowStock)));
           },
           child: Card(
             elevation: 1,
@@ -366,7 +364,7 @@ Widget bodyForInventoryDashboard(context) {
                 context,
                 MaterialPageRoute(
                     builder: (context) => ItemsList("Items Out of Stock",
-                        Colors.red[800], Colors.redAccent)));
+                        Colors.red[800], Colors.redAccent, emptyStock)));
           },
           child: Card(
             elevation: 1,
@@ -442,8 +440,8 @@ Widget bodyForInventoryDashboard(context) {
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ItemsList(
-                        "Recently Updated Items", Colors.teal, Colors.green)));
+                    builder: (context) => ItemsList("Recently Updated Items",
+                        Colors.teal, Colors.green, recentTransaction)));
           },
           child: Card(
             elevation: 1,
