@@ -9,6 +9,7 @@ import 'package:sales_n_inventory_flutter_app/others/appBarForInventory.dart';
 import 'package:sales_n_inventory_flutter_app/others/floatingActionXS.dart';
 import 'package:sales_n_inventory_flutter_app/others/items_list.dart';
 import 'package:sales_n_inventory_flutter_app/others/notification.dart';
+import 'package:sales_n_inventory_flutter_app/screens/screen1_home.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen4_addNewProduct.dart';
 import 'package:sales_n_inventory_flutter_app/screens/sreen5_removeExistingProduct.dart';
 

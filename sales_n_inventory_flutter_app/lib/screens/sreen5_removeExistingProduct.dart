@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:sales_n_inventory_flutter_app/authentication/register_page.dart';
+import 'package:sales_n_inventory_flutter_app/others/otherFunctions.dart';
 
 var Stocks = FirebaseFirestore.instance
     .collection('inventory_db')
@@ -21,7 +22,7 @@ class removeExistingProductScreenState
   var appTitle = "Remove Existing Products";
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     setState(() {
       Stocks = FirebaseFirestore.instance
@@ -118,112 +119,165 @@ class removeExistingProductScreenState
                 }
                 if (!snapshot.hasData) return Text("Network Error!");
 
-                return new Column(
-                  children: snapshot.data.docs.map((DocumentSnapshot d) {
-                    return Column(
-                      children: [
-                        Container(),
-                        Card(
-                          elevation: 1,
-                          color: d.data()['quantity'] > 5
-                              ? Colors.lightBlue[50]
-                              : (d.data()['quantity'] <= 0
-                                  ? Colors.red[50]
-                                  : Colors.amber[50]),
-                          child: ListTile(
-                            title: Text(
-                              d.data()['item_name'],
+                return Column(
+                  children: [
+                    Card(
+                      child: Container(
+                        height: 70,
+                        child: Column(
+                          children: [
+                            Text(
+                              snapshot.data.size.toString(),
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 28,
+                                  color: Colors.blue),
                             ),
-                            trailing:
-                                GestureDetector(
-                                    onTap: (){},//inventory_last_updated_on,
-                                    child: Icon(Icons.delete_forever, color: Colors.red)),
-                            subtitle: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Category: ",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                    Text(
-                                      d.data()['category'],
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Brand: ",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                    Text(
-                                      d.data()['brand'],
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Rate (INR): ",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                    Text(
-                                      "₹ " +
-                                          d.data()['price_per_item'].toString(),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Quantity: ",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                    Text(
-                                      d.data()['quantity'].toString(),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                            Text(
+                              "  Registered products in Inventory  ",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
-                    );
-                  }).toList(),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    new Column(
+                      children: snapshot.data.docs.map((DocumentSnapshot d) {
+                        return Column(
+                          children: [
+                            Container(),
+                            Card(
+                              elevation: 1,
+                              color: d.data()['quantity'] > 5
+                                  ? Colors.lightBlue[50]
+                                  : (d.data()['quantity'] <= 0
+                                      ? Colors.red[50]
+                                      : Colors.amber[50]),
+                              child: ListTile(
+                                title: Text(
+                                  d.data()['item_name'],
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                trailing: GestureDetector(
+                                    onTap: () {
+                                      //to delete product
+                                      removeProduct(
+                                          d.id, d.data()['item_name']);
+                                    },
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      child: Icon(Icons.delete_forever,
+                                          color: Colors.red),
+                                    )),
+                                subtitle: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Category: ",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                        ),
+                                        Text(
+                                          d.data()['category'],
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Brand: ",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                        ),
+                                        Text(
+                                          d.data()['brand'],
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Rate (INR): ",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                        ),
+                                        Text(
+                                          "₹ " +
+                                              d
+                                                  .data()['price_per_item']
+                                                  .toString(),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Quantity: ",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                        ),
+                                        Text(
+                                          d.data()['quantity'].toString(),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  ],
                 );
               })),
     ]);
   }
 
-  // Future<void> inventory_last_updated_on() {
-  //   return inv_db
-  //       .doc(FirebaseAuth.instance.currentUser.email.toString())
-  //       .update({'inventory_last_updated_on': DateTime.now()})
-  //       .then((value) => print("Inventory Last Date Updated"))
-  //       .catchError((error) => print("Failed to update modified date: $error"));
-  // }
+  //to delete existing product
+  Future<void> removeProduct(String id, itemName) {
+    return inv_db
+        .doc(FirebaseAuth.instance.currentUser.email.toString())
+        .collection("products")
+        .doc(id)
+        .delete()
+        .then((value) {
+      toastAlert("'${itemName}'" + " removed successfully!", context);
+      print(id + " deleted successfully");
+    }).catchError((error) => print("Failed to delete product: $error"));
+  }
+
+// Future<void> inventory_last_updated_on() {
+//   return inv_db
+//       .doc(FirebaseAuth.instance.currentUser.email.toString())
+//       .update({'inventory_last_updated_on': DateTime.now()})
+//       .then((value) => print("Inventory Last Date Updated"))
+//       .catchError((error) => print("Failed to update modified date: $error"));
+// }
 }

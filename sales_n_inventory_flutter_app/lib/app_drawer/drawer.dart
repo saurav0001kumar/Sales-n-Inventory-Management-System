@@ -117,7 +117,8 @@ Widget drawerMenuItems(context) {
                     ? "Inventory".toUpperCase() +
                         "\nLast Updated on :\n[ Sign in to see last update. ]"
                     : "Inventory".toUpperCase() +
-                        "\nLast Updated on :\n2001-01-01  10:15:06 IST",
+                        "\nLast Updated on :\n" +
+                        "Loading...",
                 style: TextStyle(
                   color: Colors.yellow,
                   fontSize: 15,
