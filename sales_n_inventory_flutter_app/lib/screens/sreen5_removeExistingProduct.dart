@@ -21,6 +21,18 @@ class removeExistingProductScreenState
   var appTitle = "Remove Existing Products";
 
   @override
+  void initState(){
+    super.initState();
+    setState(() {
+      Stocks = FirebaseFirestore.instance
+          .collection('inventory_db')
+          .doc(FirebaseAuth.instance.currentUser.email.toString())
+          .collection("products")
+          .orderBy('item_name');
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Material(
       child: Scaffold(
