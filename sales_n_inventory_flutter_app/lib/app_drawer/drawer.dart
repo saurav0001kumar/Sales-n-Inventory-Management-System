@@ -6,6 +6,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen1_home.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen2_authType.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen3_inventoryHome.dart';
+import 'package:sales_n_inventory_flutter_app/screens/screen7_about.dart';
 
 bool isDrawerOpen = false;
 
@@ -85,7 +86,10 @@ Widget drawerMenuItems(context) {
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => HomeScreen()));
               },
-              child: CustomMenuItems("Home", Icons.home, fw_home)),
+              child: Card(
+                  color: Colors.deepPurple,
+                  elevation: 0,
+                  child: CustomMenuItems("Home", Icons.home, fw_home))),
           GestureDetector(
               onTap: () {
                 if (FirebaseAuth.instance.currentUser != null) {
@@ -102,8 +106,23 @@ Widget drawerMenuItems(context) {
                       MaterialPageRoute(builder: (context) => AuthType()));
                 }
               },
-              child: CustomMenuItems("Inventory", Icons.inventory, fw_inv)),
-          CustomMenuItems("About", Icons.info, fw_about),
+              child: Card(
+                  color: Colors.deepPurple,
+                  elevation: 0,
+                  child:
+                      CustomMenuItems("Inventory", Icons.inventory, fw_inv))),
+          GestureDetector(
+            onTap: () {
+              resetFontWeigts();
+              fw_about = FontWeight.bold;
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => AboutScreen()));
+            },
+            child: Card(
+                color: Colors.deepPurple,
+                elevation: 0,
+                child: CustomMenuItems("About", Icons.info, fw_about)),
+          ),
         ],
       ),
       Padding(
@@ -148,10 +167,11 @@ Widget drawerMenuItems(context) {
                             children: [
                               Text(
                                 DateTime.fromMicrosecondsSinceEpoch(d
-                                        .data()['inventory_last_updated_on']
-                                        .microsecondsSinceEpoch)
-                                    .toString()
-                                    .split(".")[0],
+                                            .data()['inventory_last_updated_on']
+                                            .microsecondsSinceEpoch)
+                                        .toString()
+                                        .split(".")[0] +
+                                    " IST",
                                 style: TextStyle(
                                   color: Colors.yellow,
                                   fontSize: 15,

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_drawer/fancy_drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +9,6 @@ import 'package:sales_n_inventory_flutter_app/screens/screen2_authType.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen3_inventoryHome.dart';
 
 FancyDrawerController _controller;
-
-String inventoryLastUpdate;
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);

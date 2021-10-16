@@ -145,7 +145,8 @@ class ItemsListState extends State<ItemsList> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => editItem(d.data(), d.id)));
+                                          builder: (context) =>
+                                              editItem(d.data(), d.id)));
                                 },
                                 child: Chip(
                                   elevation: 1,
@@ -220,6 +221,71 @@ class ItemsListState extends State<ItemsList> {
                                     ),
                                   ],
                                 ),
+                                if (appBarTitle == "Recently Updated Items")
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Recently added Items: ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
+                                      ),
+                                      Text(
+                                        "+" +
+                                            d
+                                                .data()['recently_added_items']
+                                                .toString(),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                            color: Colors.green),
+                                      ),
+                                    ],
+                                  ),
+                                if (appBarTitle == "Recently Updated Items")
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Modified date: ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 8.0),
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              DateTime.fromMicrosecondsSinceEpoch(d
+                                                      .data()['date_modified']
+                                                      .microsecondsSinceEpoch)
+                                                  .toString()
+                                                  .split(" ")[0],
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            Text(
+                                              DateTime.fromMicrosecondsSinceEpoch(d
+                                                          .data()[
+                                                              'date_modified']
+                                                          .microsecondsSinceEpoch)
+                                                      .toString()
+                                                      .split(" ")[1]
+                                                      .split(".")[0] +
+                                                  " (IST)",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                               ],
                             ),
                           ),
