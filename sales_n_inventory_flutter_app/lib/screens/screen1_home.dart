@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen>
           backgroundColor: Colors.deepPurple,
           controller: _controller,
           drawerItems: <Widget>[
-            drawerMenuItems(context),
+            DrawerMenu(),
           ],
           child: Scaffold(
               backgroundColor: Colors.white,
@@ -142,7 +142,7 @@ Widget bodyForHome(context) {
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => AuthType()));
               else {
-                resetFontWeigts();
+                DrawerMenuState.resetFontWeigts();
                 fw_inv = FontWeight.bold;
                 Navigator.pushReplacement(
                     context,

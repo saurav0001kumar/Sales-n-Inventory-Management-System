@@ -27,9 +27,6 @@ class _SignInPageState extends State<SignInPage> {
 
   // Code for sign out.
   Future<void> _signOut() async {
-
-    await FirebaseFirestore.instance.clearPersistence();
-    await _deleteAppDir(); _deleteCacheDir();
     await FirebaseAuth.instance.signOut();
   }
 }
@@ -47,7 +44,7 @@ Future<void> _deleteCacheDir() async {
 Future<void> _deleteAppDir() async {
   final appDir = await getApplicationSupportDirectory();
 
-  if(appDir.existsSync()){
+  if (appDir.existsSync()) {
     appDir.deleteSync(recursive: true);
   }
 }
@@ -179,7 +176,8 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
           content: Text('Signed in as ${user.email}'),
         ),
       );
-      resetFontWeigts();
+
+      DrawerMenuState.resetFontWeigts();
       fw_inv = FontWeight.bold;
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => InventoryDashboard()));

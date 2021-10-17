@@ -76,7 +76,7 @@ class AppBarForSignUpState extends State<AppBarForSignUp> {
                         Navigator.pushReplacement(
                             context, MaterialPageRoute(builder: (context) => AuthType()));
                       else {
-                        resetFontWeigts();
+                        DrawerMenuState.resetFontWeigts();
                         fw_inv=FontWeight.bold;
                         Navigator.pushReplacement(
                             context, MaterialPageRoute(

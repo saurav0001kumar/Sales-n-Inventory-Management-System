@@ -107,7 +107,7 @@ class _InventoryDashboardState extends State<InventoryDashboard>
           backgroundColor: Colors.deepPurple,
           controller: _controller,
           drawerItems: <Widget>[
-            drawerMenuItems(context),
+            DrawerMenu(),
           ],
           child: Scaffold(
               backgroundColor: Colors.white,

@@ -57,7 +57,7 @@ class _AboutScreenState extends State<AboutScreen>
           backgroundColor: Colors.deepPurple,
           controller: _controller,
           drawerItems: <Widget>[
-            drawerMenuItems(context),
+            DrawerMenu(),
           ],
           child: Scaffold(
               backgroundColor: Colors.white,

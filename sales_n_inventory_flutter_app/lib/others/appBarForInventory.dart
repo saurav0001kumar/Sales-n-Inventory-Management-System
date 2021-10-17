@@ -79,7 +79,7 @@ class AppBarForInventoryState extends State<AppBarForInventory> {
                     ),
                     onPressed: () async {
                       await FirebaseAuth.instance.signOut();
-                      resetFontWeigts();
+                      DrawerMenuState.resetFontWeigts();
                       fw_home = FontWeight.bold;
 
                       if (FirebaseAuth.instance.currentUser == null) {
