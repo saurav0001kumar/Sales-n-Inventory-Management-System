@@ -14,11 +14,14 @@ class ItemsList extends StatefulWidget {
 
   var stock;
 
-  ItemsList(this.appBarTitle, this.color1, this.color2, this.stock);
+  var stockCounts;
+
+  ItemsList(
+      this.appBarTitle, this.color1, this.color2, this.stock, this.stockCounts);
 
   @override
-  State<StatefulWidget> createState() =>
-      ItemsListState(this.appBarTitle, this.color1, this.color2, this.stock);
+  State<StatefulWidget> createState() => ItemsListState(
+      this.appBarTitle, this.color1, this.color2, this.stock, this.stockCounts);
 }
 
 class ItemsListState extends State<ItemsList> {
@@ -30,7 +33,10 @@ class ItemsListState extends State<ItemsList> {
 
   var stock;
 
-  ItemsListState(this.appBarTitle, this.color1, this.color2, this.stock);
+  var stockCounts;
+
+  ItemsListState(
+      this.appBarTitle, this.color1, this.color2, this.stock, this.stockCounts);
 
   @override
   void initState() {
@@ -66,6 +72,59 @@ class ItemsListState extends State<ItemsList> {
       ),
       Column(children: [
         StreamBuilder<QuerySnapshot>(
+            stream: stockCounts.snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Center(
+                    child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Text('Something went wrong'),
+                ));
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [Center(child: CircularProgressIndicator())]);
+              }
+
+              if (!snapshot.hasData)
+                return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text("No Data"),
+                      ))
+                    ]);
+
+              return Card(
+                child: Container(
+                  height: 70,
+                  child: Column(
+                    children: [
+                      Text(
+                        snapshot.data.size.toString(),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 28,
+                            color: color2),
+                      ),
+                      Text(
+                        "  " + appBarTitle + "  ",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+        StreamBuilder<QuerySnapshot>(
             stream: stock.snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -96,201 +155,210 @@ class ItemsListState extends State<ItemsList> {
 
               return Column(
                 children: [
-                  Card(
-                    child: Container(
-                      height: 70,
-                      child: Column(
-                        children: [
-                          Text(
-                            snapshot.data.size.toString(),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 28,
-                                color: color2),
-                          ),
-                          Text(
-                            "  " + appBarTitle + "  ",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
                   SizedBox(
                     height: 10,
                   ),
                   new Column(
                     children: snapshot.data.docs.map((DocumentSnapshot d) {
-                      return Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                        child: Card(
-                          elevation: 1,
-                          color: d.data()['quantity'] > 5
-                              ? Colors.lightBlue[50]
-                              : (d.data()['quantity'] <= 0
-                                  ? Colors.red[50]
-                                  : Colors.amber[50]),
-                          child: ListTile(
-                            title: Text(
-                              d.data()['item_name'],
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
-                            ),
-                            trailing: GestureDetector(
-                                onTap: () {
-                                  //to edit item
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              editItem(d.data(), d.id)));
-                                },
-                                child: Chip(
-                                  elevation: 1,
-                                  backgroundColor: Colors.white,
-                                  label: Text("Edit"),
-                                  avatar: Icon(Icons.edit, color: Colors.amber),
-                                )),
-                            subtitle: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Category: ",
+                      if ((appBarTitle == "Products in Stock" &&
+                              d.data()['quantity'] > 0) ||
+                          (appBarTitle == "Low Stock Items" &&
+                              (d.data()['quantity'] > 0 &&
+                                  d.data()['quantity'] <= 5)) ||
+                          (appBarTitle == "Items Out of Stock" &&
+                              d.data()['quantity'] <= 0) ||
+                          (appBarTitle == "Recently Updated Items"))
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                          child: Card(
+                            elevation: 1,
+                            color: d.data()['quantity'] > 5
+                                ? Colors.lightBlue[50]
+                                : (d.data()['quantity'] <= 0
+                                    ? Colors.red[50]
+                                    : Colors.amber[50]),
+                            shadowColor: d.data()['quantity'] > 5
+                                ? Colors.lightBlue
+                                : (d.data()['quantity'] <= 0
+                                    ? Colors.red
+                                    : Colors.amber),
+                            child: ListTile(
+                              title: Text(
+                                d.data()['item_name'],
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18),
+                              ),
+                              trailing: GestureDetector(
+                                  onTap: () {
+                                    //to edit item
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                editItem(d.data(), d.id)));
+                                  },
+                                  child: Chip(
+                                    elevation: 1,
+                                    backgroundColor: Colors.white,
+                                    shadowColor: Colors.deepPurple,
+                                    label: Text(
+                                      "Edit",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 16),
+                                          color: Colors.deepPurple),
                                     ),
-                                    Text(
-                                      d.data()['category'],
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Brand: ",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                    Text(
-                                      d.data()['brand'],
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Rate (INR): ",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                    Text(
-                                      "₹ " +
-                                          d.data()['price_per_item'].toString(),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Quantity: ",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                    Text(
-                                      d.data()['quantity'].toString(),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                  ],
-                                ),
-                                if (appBarTitle == "Recently Updated Items")
+                                  )),
+                              subtitle: Column(
+                                children: [
                                   Row(
                                     children: [
                                       Text(
-                                        "Recently added Items: ",
+                                        "Category: ",
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 16),
                                       ),
                                       Text(
-                                        "+" +
+                                        d.data()['category'],
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Brand: ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
+                                      ),
+                                      Text(
+                                        d.data()['brand'],
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Rate (INR): ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
+                                      ),
+                                      Text(
+                                        "₹ " +
                                             d
-                                                .data()['recently_added_items']
+                                                .data()['price_per_item']
                                                 .toString(),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                            color: Colors.green),
+                                            fontSize: 16),
                                       ),
                                     ],
                                   ),
-                                if (appBarTitle == "Recently Updated Items")
                                   Row(
                                     children: [
                                       Text(
-                                        "Modified date: ",
+                                        "Quantity: ",
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 16),
                                       ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 8.0),
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              DateTime.fromMicrosecondsSinceEpoch(d
-                                                      .data()['date_modified']
-                                                      .microsecondsSinceEpoch)
-                                                  .toString()
-                                                  .split(" ")[0],
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                            Text(
-                                              DateTime.fromMicrosecondsSinceEpoch(d
-                                                          .data()[
-                                                              'date_modified']
-                                                          .microsecondsSinceEpoch)
-                                                      .toString()
-                                                      .split(" ")[1]
-                                                      .split(".")[0] +
-                                                  " (IST)",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                      Text(
+                                        d.data()['quantity'].toString(),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
                                       ),
                                     ],
                                   ),
-                              ],
+                                  if (appBarTitle == "Recently Updated Items")
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Quantity updated: ",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                        ),
+                                        Text(
+                                          d.data()['recently_added_items'] >= 0
+                                              ? "+" +
+                                                  d
+                                                      .data()[
+                                                          'recently_added_items']
+                                                      .toString()
+                                              : d
+                                                  .data()[
+                                                      'recently_added_items']
+                                                  .toString(),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                              color: d.data()[
+                                                          'recently_added_items'] >=
+                                                      0
+                                                  ? Colors.green
+                                                  : Colors.red),
+                                        ),
+                                      ],
+                                    ),
+                                  if (appBarTitle == "Recently Updated Items")
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Modified date: ",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                DateTime.fromMicrosecondsSinceEpoch(d
+                                                        .data()['date_modified']
+                                                        .microsecondsSinceEpoch)
+                                                    .toString()
+                                                    .split(" ")[0],
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                              Text(
+                                                DateTime.fromMicrosecondsSinceEpoch(d
+                                                            .data()[
+                                                                'date_modified']
+                                                            .microsecondsSinceEpoch)
+                                                        .toString()
+                                                        .split(" ")[1]
+                                                        .split(".")[0] +
+                                                    " (IST)",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      );
+                        );
+                      else
+                        return Container();
                     }).toList(),
                   ),
                   SizedBox(

@@ -249,7 +249,7 @@ class editItemState extends State<editItem> {
       'quantity': int.parse(quantityTC.text),
       'date_modified': DateTime.now(),
       'recently_added_items':
-          (int.parse(quantityTC.text) - previousQuantity).abs(),
+          (int.parse(quantityTC.text) - previousQuantity),
     }).then((value) {
       print("Inventory Item Updated");
       inventory_last_updated_on();

@@ -11,6 +11,26 @@ import 'package:sales_n_inventory_flutter_app/others/items_list.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen4_addNewProduct.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen5_removeExistingProduct.dart';
 
+// -Sort by item_name-start->
+var in_Stock = FirebaseFirestore.instance
+    .collection('inventory_db')
+    .doc(FirebaseAuth.instance.currentUser.email.toString())
+    .collection("products")
+    .orderBy('item_name');
+
+var low_Stock = FirebaseFirestore.instance
+    .collection('inventory_db')
+    .doc(FirebaseAuth.instance.currentUser.email.toString())
+    .collection("products")
+    .orderBy('item_name');
+
+var empty_Stock = FirebaseFirestore.instance
+    .collection('inventory_db')
+    .doc(FirebaseAuth.instance.currentUser.email.toString())
+    .collection("products")
+    .orderBy('item_name');
+// -Sort by item_name-ends->
+
 var inStock = FirebaseFirestore.instance
     .collection('inventory_db')
     .doc(FirebaseAuth.instance.currentUser.email.toString())
@@ -35,7 +55,7 @@ var recentTransaction = FirebaseFirestore.instance
     .collection("products")
     .orderBy("date_modified", descending: true)
     .where("date_modified",
-        isGreaterThanOrEqualTo: DateTime.now().subtract(Duration(days: 10)));
+        isGreaterThanOrEqualTo: DateTime.now().subtract(Duration(days: 30)));
 
 //
 var InStocks = 0, OutStocks = 0;
@@ -62,6 +82,25 @@ class _InventoryDashboardState extends State<InventoryDashboard>
       });
     //
     setState(() {
+      // -Sort by item_name-start->
+      in_Stock = FirebaseFirestore.instance
+          .collection('inventory_db')
+          .doc(FirebaseAuth.instance.currentUser.email.toString())
+          .collection("products")
+          .orderBy('item_name');
+
+      low_Stock = FirebaseFirestore.instance
+          .collection('inventory_db')
+          .doc(FirebaseAuth.instance.currentUser.email.toString())
+          .collection("products")
+          .orderBy('item_name');
+
+      empty_Stock = FirebaseFirestore.instance
+          .collection('inventory_db')
+          .doc(FirebaseAuth.instance.currentUser.email.toString())
+          .collection("products")
+          .orderBy('item_name');
+// -Sort by item_name-ends->
       inStock = FirebaseFirestore.instance
           .collection('inventory_db')
           .doc(FirebaseAuth.instance.currentUser.email.toString())
@@ -210,7 +249,7 @@ Widget bodyForInventoryDashboard(context) {
                 context,
                 MaterialPageRoute(
                     builder: (context) => ItemsList("Products in Stock",
-                        Colors.indigo, Colors.lightBlue, inStock)));
+                        Colors.indigo, Colors.lightBlue, in_Stock, inStock)));
           },
           child: Card(
             elevation: 1,
@@ -287,7 +326,7 @@ Widget bodyForInventoryDashboard(context) {
                 context,
                 MaterialPageRoute(
                     builder: (context) => ItemsList("Low Stock Items",
-                        Colors.amber[800], Colors.amber, lowStock)));
+                        Colors.amber[800], Colors.amber, low_Stock, lowStock)));
           },
           child: Card(
             elevation: 1,
@@ -363,8 +402,12 @@ Widget bodyForInventoryDashboard(context) {
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ItemsList("Items Out of Stock",
-                        Colors.red[800], Colors.redAccent, emptyStock)));
+                    builder: (context) => ItemsList(
+                        "Items Out of Stock",
+                        Colors.red[800],
+                        Colors.redAccent,
+                        empty_Stock,
+                        emptyStock)));
           },
           child: Card(
             elevation: 1,
@@ -440,8 +483,12 @@ Widget bodyForInventoryDashboard(context) {
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ItemsList("Recently Updated Items",
-                        Colors.teal, Colors.green, recentTransaction)));
+                    builder: (context) => ItemsList(
+                        "Recently Updated Items",
+                        Colors.teal,
+                        Colors.green,
+                        recentTransaction,
+                        recentTransaction)));
           },
           child: Card(
             elevation: 1,
