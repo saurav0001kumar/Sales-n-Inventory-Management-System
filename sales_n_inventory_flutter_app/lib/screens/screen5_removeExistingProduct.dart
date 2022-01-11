@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sales_n_inventory_flutter_app/app_drawer/drawer.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:sales_n_inventory_flutter_app/authentication/register_page.dart';
 import 'package:sales_n_inventory_flutter_app/others/otherFunctions.dart';
 
@@ -24,6 +24,8 @@ class removeExistingProductScreenState
   @override
   void initState() {
     super.initState();
+    getCategories();
+    selectedCategory = "Default";
     setState(() {
       Stocks = FirebaseFirestore.instance
           .collection('inventory_db')
@@ -88,6 +90,90 @@ class removeExistingProductScreenState
                       ]),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.deepPurple[50],
+                          borderRadius: BorderRadius.circular(0)),
+                      child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Text(
+                                "Group by\nProduct Category :",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Theme(
+                                data: Theme.of(context).copyWith(
+                                  canvasColor: Colors.white,
+                                ),
+                                child: DropdownButton<String>(
+                                  icon: Icon(
+                                    MaterialIcons.sort,
+                                    color: Colors.deepPurple,
+                                    size: 23,
+                                  ),
+                                  iconDisabledColor: Colors.grey,
+                                  iconEnabledColor: Colors.deepPurple,
+                                  isDense: false,
+                                  autofocus: false,
+                                  borderRadius: BorderRadius.circular(10),
+                                  underline: SizedBox(),
+                                  isExpanded: false,
+                                  alignment: Alignment.center,
+                                  focusColor: Colors.white,
+                                  value: selectedCategory,
+                                  elevation: 10,
+                                  style: TextStyle(color: Colors.white),
+                                  items: categories
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(
+                                        value,
+                                        style: TextStyle(
+                                          color: Colors.deepPurple,
+                                          fontFamily: 'GoogleSans',
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  hint: Text(
+                                    "Product Category",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  onChanged: (String value) {
+                                    setState(() {
+                                      selectedCategory = value;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               )
             ],
@@ -98,7 +184,7 @@ class removeExistingProductScreenState
   Widget bodyForRemoveExistingProductScreen(context) {
     return ListView(children: [
       SizedBox(
-        height: MediaQuery.of(context).size.height * 0.1,
+        height: MediaQuery.of(context).size.height * 0.18,
       ),
       Padding(
           padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -117,7 +203,16 @@ class removeExistingProductScreenState
                         Center(child: CircularProgressIndicator.adaptive())
                       ]);
                 }
-                if (!snapshot.hasData) return Text("Network Error!");
+                if (!snapshot.hasData)
+                  return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text("No Data"),
+                        ))
+                      ]);
 
                 return Column(
                   children: [
@@ -149,109 +244,216 @@ class removeExistingProductScreenState
                     ),
                     new Column(
                       children: snapshot.data.docs.map((DocumentSnapshot d) {
-                        return Column(
-                          children: [
-                            Container(),
-                            Card(
-                              elevation: 1,
-                              color: d.data()['quantity'] > 5
-                                  ? Colors.lightBlue[50]
-                                  : (d.data()['quantity'] <= 0
-                                      ? Colors.red[50]
-                                      : Colors.amber[50]),
-                              child: ListTile(
-                                title: Text(
-                                  d.data()['item_name'],
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18),
-                                ),
-                                trailing: GestureDetector(
-                                    onTap: () {
-                                      //to delete product
-                                      removeProduct(
-                                          d.id, d.data()['item_name']);
-                                    },
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      child: Icon(Icons.delete_forever,
-                                          color: Colors.red),
-                                    )),
-                                subtitle: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Category: ",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                        ),
-                                        Text(
-                                          d.data()['category'],
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Brand: ",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                        ),
-                                        Text(
-                                          d.data()['brand'],
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Rate (INR): ",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                        ),
-                                        Text(
-                                          "₹ " +
-                                              d
-                                                  .data()['price_per_item']
-                                                  .toString(),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Quantity: ",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                        ),
-                                        Text(
-                                          d.data()['quantity'].toString(),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                        if (selectedCategory == "Default")
+                          return Column(
+                            children: [
+                              Container(),
+                              Card(
+                                elevation: 1,
+                                color: d.data()['quantity'] > 5
+                                    ? Colors.lightBlue[50]
+                                    : (d.data()['quantity'] <= 0
+                                        ? Colors.red[50]
+                                        : Colors.amber[50]),
+                                child: ListTile(
+                                  title: Text(
+                                    d.data()['item_name'],
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
+                                  ),
+                                  trailing: GestureDetector(
+                                      onTap: () {
+                                        //to delete product
+                                        removeProduct(
+                                            d.id, d.data()['item_name']);
+                                      },
+                                      child: CircleAvatar(
+                                        backgroundColor: Colors.white,
+                                        child: Icon(Icons.delete_forever,
+                                            color: Colors.red),
+                                      )),
+                                  subtitle: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Category: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                          Text(
+                                            d.data()['category'],
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Brand: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                          Text(
+                                            d.data()['brand'],
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Rate (INR): ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                          Text(
+                                            "₹ " +
+                                                d
+                                                    .data()['price_per_item']
+                                                    .toString(),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Quantity: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                          Text(
+                                            d.data()['quantity'].toString(),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        );
+                            ],
+                          );
+                        else if (d.data()['category'] == selectedCategory)
+                          return Column(
+                            children: [
+                              Container(),
+                              Card(
+                                elevation: 1,
+                                color: d.data()['quantity'] > 5
+                                    ? Colors.lightBlue[50]
+                                    : (d.data()['quantity'] <= 0
+                                        ? Colors.red[50]
+                                        : Colors.amber[50]),
+                                child: ListTile(
+                                  title: Text(
+                                    d.data()['item_name'],
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
+                                  ),
+                                  trailing: GestureDetector(
+                                      onTap: () {
+                                        //to delete product
+                                        removeProduct(
+                                            d.id, d.data()['item_name']);
+                                      },
+                                      child: CircleAvatar(
+                                        backgroundColor: Colors.white,
+                                        child: Icon(Icons.delete_forever,
+                                            color: Colors.red),
+                                      )),
+                                  subtitle: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Category: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                          Text(
+                                            d.data()['category'],
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Brand: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                          Text(
+                                            d.data()['brand'],
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Rate (INR): ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                          Text(
+                                            "₹ " +
+                                                d
+                                                    .data()['price_per_item']
+                                                    .toString(),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Quantity: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                          Text(
+                                            d.data()['quantity'].toString(),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        else
+                          return Container();
                       }).toList(),
                     ),
                   ],
@@ -282,5 +484,21 @@ class removeExistingProductScreenState
         .update({'inventory_last_updated_on': DateTime.now()})
         .then((value) => print("Inventory Last Date Updated"))
         .catchError((error) => print("Failed to update modified date: $error"));
+  }
+
+  void getCategories() {
+    var categ = [];
+    FirebaseFirestore.instance
+        .collection('inventory_db')
+        .doc(FirebaseAuth.instance.currentUser.email.toString())
+        .collection("products")
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        setState(() {
+          categories.add(doc['category']);
+        });
+      });
+    });
   }
 }
