@@ -41,7 +41,7 @@ var lowStock = FirebaseFirestore.instance
     .collection('inventory_db')
     .doc(FirebaseAuth.instance.currentUser.email.toString())
     .collection("products")
-    .where("quantity", isLessThan: 5, isGreaterThan: 0);
+    .where("quantity", isLessThan: 6, isGreaterThan: 0);
 
 var emptyStock = FirebaseFirestore.instance
     .collection('inventory_db')
@@ -111,7 +111,7 @@ class _InventoryDashboardState extends State<InventoryDashboard>
           .collection('inventory_db')
           .doc(FirebaseAuth.instance.currentUser.email.toString())
           .collection("products")
-          .where("quantity", isLessThan: 5, isGreaterThan: 0);
+          .where("quantity", isLessThan: 6, isGreaterThan: 0);
 
       emptyStock = FirebaseFirestore.instance
           .collection('inventory_db')
@@ -126,7 +126,7 @@ class _InventoryDashboardState extends State<InventoryDashboard>
           .orderBy("date_modified", descending: true)
           .where("date_modified",
               isGreaterThanOrEqualTo:
-                  DateTime.now().subtract(Duration(days: 10)));
+                  DateTime.now().subtract(Duration(days: 30)));
     });
     //
   }

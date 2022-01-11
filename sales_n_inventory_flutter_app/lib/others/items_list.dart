@@ -102,7 +102,7 @@ class ItemsListState extends State<ItemsList> {
 
               return Card(
                 child: Container(
-                  height: 70,
+                  height: 80,
                   child: Column(
                     children: [
                       Text(
@@ -118,6 +118,19 @@ class ItemsListState extends State<ItemsList> {
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),
+                      ),
+                      Text(
+                        appBarTitle == "Products in Stock"
+                            ? "Items with quantity > 0"
+                            : (appBarTitle == "Low Stock Items"
+                                ? "Items with quantity <= 5"
+                                : (appBarTitle == "Items Out of Stock"
+                                    ? "Items with quantity = 0"
+                                    : "Items updated in last 30 days")),
+                        style: TextStyle(
+                            color: color2[800],
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),

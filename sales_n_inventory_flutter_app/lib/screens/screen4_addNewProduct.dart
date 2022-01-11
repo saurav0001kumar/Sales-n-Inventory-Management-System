@@ -48,6 +48,7 @@ class addNewProductScreenState extends State<addNewProductScreen> {
     // TODO: implement initState
     super.initState();
     resetFields();
+    _scanBarcode="Unknown";
     print(totalProducts);
   }
 
@@ -130,22 +131,37 @@ class addNewProductScreenState extends State<addNewProductScreen> {
                     children: [
                       GestureDetector(
                           onTap: () => scanQR(),
-                          child: Icon(
-                            MaterialCommunityIcons.qrcode_scan,
-                            size: 75,
+                          child: Card(
+                            elevation: 0,
+                            child: Icon(
+                              MaterialCommunityIcons.qrcode_scan,
+                              size: 75,
+                              color: Colors.deepPurple[900],
+                            ),
                           )),
-                      Text(
-                        "  OR  ",
-                        style: TextStyle(
-                          color: Colors.deepPurple,
-                          fontSize: 18,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          " OR ",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.purple,
+                            fontSize: 15,
+                          ),
                         ),
                       ),
                       GestureDetector(
                           onTap: () => scanBarcodeNormal(),
-                          child: Icon(
-                            MaterialCommunityIcons.barcode_scan,
-                            size: 75,
+                          child: Card(
+                            elevation: 0,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(5,0,5,0),
+                              child: Icon(
+                                MaterialCommunityIcons.barcode_scan,
+                                size: 75,
+                                color: Colors.deepPurple[900],
+                              ),
+                            ),
                           )),
                     ],
                   ),
@@ -153,7 +169,7 @@ class addNewProductScreenState extends State<addNewProductScreen> {
                     padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
                     child: Center(
                       child: Text(
-                        "Scan QR or Barcode to add.",
+                        "Click to scan QR or Barcode.",
                         style: TextStyle(
                             color: Colors.grey[500],
                             fontWeight: FontWeight.bold),
@@ -167,10 +183,10 @@ class addNewProductScreenState extends State<addNewProductScreen> {
                   Text(
                       (_scanBarcode == "Unknown")
                           ? ""
-                          : ((_scanBarcode == "-1") ? "" : "✔"),
+                          : ((_scanBarcode == "-1") ? "" : "✅"),
                       style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.red,
+                          fontSize: 18,
+                          color: Colors.green,
                           fontWeight: FontWeight.bold))
                 ])),
         Form(
