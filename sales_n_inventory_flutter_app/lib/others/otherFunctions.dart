@@ -18,6 +18,10 @@ var selectedVendor="ALL";
 var vendor_phones=[];
 var vendor_emails=[];
 
+//Notification Alert Items Count (Low Stock & Out of Stock)
+var out_of_stocks=0;
+var low_stocks=0;
+
 //TOAST alert
 void toastAlert(String message,context) {
   Toast.show(message, context,

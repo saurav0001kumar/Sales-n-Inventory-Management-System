@@ -6,6 +6,8 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:sales_n_inventory_flutter_app/others/appBarForList.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen3_inventoryHome.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen6_ItemEdit.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 import 'otherFunctions.dart';
 
@@ -446,7 +448,6 @@ class ItemsListState extends State<ItemsList> {
                                             ),
                                           ],
                                         ),
-
                                       Row(
                                         children: [
                                           Text(
@@ -455,8 +456,11 @@ class ItemsListState extends State<ItemsList> {
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16),
                                           ),
-                                          Text(""+
-                                            d.data()['vendor_name'].toString(),
+                                          Text(
+                                            "" +
+                                                d
+                                                    .data()['vendor_name']
+                                                    .toString(),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16),
@@ -471,8 +475,11 @@ class ItemsListState extends State<ItemsList> {
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16),
                                           ),
-                                          Text(""+
-                                              d.data()['vendor_email'].toString(),
+                                          Text(
+                                            "" +
+                                                d
+                                                    .data()['vendor_email']
+                                                    .toString(),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16),
@@ -487,14 +494,94 @@ class ItemsListState extends State<ItemsList> {
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16),
                                           ),
-                                          Text(""+
-                                              d.data()['vendor_phone'].toString(),
+                                          Text(
+                                            "" +
+                                                d
+                                                    .data()['vendor_phone']
+                                                    .toString(),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16),
                                           ),
                                         ],
                                       ),
+                                      //Buttons: call, sms, email
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              _makePhoneCall(
+                                                  d.data()['vendor_phone']);
+                                            },
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      10, 0, 10, 0),
+                                              child: Chip(
+                                                elevation: 1,
+                                                backgroundColor: Colors.white,
+                                                label: Icon(
+                                                  Icons.phone,
+                                                  color: color1,
+                                                  size: 30,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              _makePhoneSMS(
+                                                  d.data()['vendor_phone']);
+                                            },
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      10, 0, 10, 0),
+                                              child: Chip(
+                                                elevation: 1,
+                                                backgroundColor: Colors.white,
+                                                label: Icon(
+                                                  Icons.sms,
+                                                  color: color1,
+                                                  size: 30,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              _sendEmail(
+                                                  "Hello, I want to request for item " +
+                                                      "'" +
+                                                      d.data()['item_name'] +
+                                                      "' of brand " +
+                                                      "'" +
+                                                      d.data()['brand'] +
+                                                      "'. *Required Item QUANTITY = 50 ",
+                                                  "Order Request for item '" +
+                                                      d.data()['item_name'] +
+                                                      "'.",
+                                                  d.data()['vendor_email']);
+                                            },
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      10, 0, 10, 0),
+                                              child: Chip(
+                                                elevation: 1,
+                                                backgroundColor: Colors.white,
+                                                label: Icon(
+                                                  Icons.mail,
+                                                  color: color1,
+                                                  size: 30,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
                                     ],
                                   ),
                                 ),
@@ -554,7 +641,8 @@ class ItemsListState extends State<ItemsList> {
                                   title: Text(
                                     d.data()['item_name'],
                                     style: TextStyle(
-                                        fontWeight: FontWeight.bold, fontSize: 18),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
                                   ),
                                   subtitle: Column(
                                     children: [
@@ -625,7 +713,8 @@ class ItemsListState extends State<ItemsList> {
                                           ),
                                         ],
                                       ),
-                                      if (appBarTitle == "Recently Updated Items")
+                                      if (appBarTitle ==
+                                          "Recently Updated Items")
                                         Row(
                                           children: [
                                             Text(
@@ -635,7 +724,8 @@ class ItemsListState extends State<ItemsList> {
                                                   fontSize: 16),
                                             ),
                                             Text(
-                                              d.data()['recently_added_items'] >= 0
+                                              d.data()['recently_added_items'] >=
+                                                      0
                                                   ? "+" +
                                                       d
                                                           .data()[
@@ -656,7 +746,8 @@ class ItemsListState extends State<ItemsList> {
                                             ),
                                           ],
                                         ),
-                                      if (appBarTitle == "Recently Updated Items")
+                                      if (appBarTitle ==
+                                          "Recently Updated Items")
                                         Row(
                                           children: [
                                             Text(
@@ -666,18 +757,20 @@ class ItemsListState extends State<ItemsList> {
                                                   fontSize: 16),
                                             ),
                                             Padding(
-                                              padding:
-                                                  const EdgeInsets.only(top: 8.0),
+                                              padding: const EdgeInsets.only(
+                                                  top: 8.0),
                                               child: Column(
                                                 children: [
                                                   Text(
                                                     DateTime.fromMicrosecondsSinceEpoch(d
-                                                            .data()['date_modified']
+                                                            .data()[
+                                                                'date_modified']
                                                             .microsecondsSinceEpoch)
                                                         .toString()
                                                         .split(" ")[0],
                                                     style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 16,
                                                     ),
                                                   ),
@@ -691,7 +784,8 @@ class ItemsListState extends State<ItemsList> {
                                                             .split(".")[0] +
                                                         " (IST)",
                                                     style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 16,
                                                     ),
                                                   ),
@@ -700,8 +794,6 @@ class ItemsListState extends State<ItemsList> {
                                             ),
                                           ],
                                         ),
-
-
                                       Row(
                                         children: [
                                           Text(
@@ -710,8 +802,11 @@ class ItemsListState extends State<ItemsList> {
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16),
                                           ),
-                                          Text(""+
-                                              d.data()['vendor_name'].toString(),
+                                          Text(
+                                            "" +
+                                                d
+                                                    .data()['vendor_name']
+                                                    .toString(),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16),
@@ -726,8 +821,11 @@ class ItemsListState extends State<ItemsList> {
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16),
                                           ),
-                                          Text(""+
-                                              d.data()['vendor_email'].toString(),
+                                          Text(
+                                            "" +
+                                                d
+                                                    .data()['vendor_email']
+                                                    .toString(),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16),
@@ -742,14 +840,94 @@ class ItemsListState extends State<ItemsList> {
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16),
                                           ),
-                                          Text(""+
-                                              d.data()['vendor_phone'].toString(),
+                                          Text(
+                                            "" +
+                                                d
+                                                    .data()['vendor_phone']
+                                                    .toString(),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16),
                                           ),
                                         ],
                                       ),
+                                      //Buttons: call, sms, email
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              _makePhoneCall(
+                                                  d.data()['vendor_phone']);
+                                            },
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      10, 0, 10, 0),
+                                              child: Chip(
+                                                elevation: 1,
+                                                backgroundColor: Colors.white,
+                                                label: Icon(
+                                                  Icons.phone,
+                                                  color: color1,
+                                                  size: 30,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              _makePhoneSMS(
+                                                  d.data()['vendor_phone']);
+                                            },
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      10, 0, 10, 0),
+                                              child: Chip(
+                                                elevation: 1,
+                                                backgroundColor: Colors.white,
+                                                label: Icon(
+                                                  Icons.sms,
+                                                  color: color1,
+                                                  size: 30,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              _sendEmail(
+                                                  "Hello, I want to request for item " +
+                                                      "'" +
+                                                      d.data()['item_name'] +
+                                                      "' of brand " +
+                                                      "'" +
+                                                      d.data()['brand'] +
+                                                      "'. *Required Item QUANTITY = 50 ",
+                                                  "Order Request for item '" +
+                                                      d.data()['item_name'] +
+                                                      "'.",
+                                                  d.data()['vendor_email']);
+                                            },
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      10, 0, 10, 0),
+                                              child: Chip(
+                                                elevation: 1,
+                                                backgroundColor: Colors.white,
+                                                label: Icon(
+                                                  Icons.mail,
+                                                  color: color1,
+                                                  size: 30,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
                                     ],
                                   ),
                                 ),
@@ -814,5 +992,59 @@ class ItemsListState extends State<ItemsList> {
         });
       });
     });
+  }
+
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
+    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
+    // such as spaces in the input, which would cause `launch` to fail on some
+    // platforms.
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launch(launchUri.toString());
+  }
+
+  Future<void> _sendEmail(
+      String email_body, String email_subject, email_ID) async {
+    final Email email = Email(
+      body: email_body,
+      subject: email_subject,
+      recipients: [email_ID],
+      cc: [],
+      bcc: [],
+      attachmentPaths: [],
+      isHTML: false,
+    );
+
+    String platformResponse;
+
+    try {
+      await FlutterEmailSender.send(email);
+      platformResponse = 'Success! Check your Mailbox for sent items.';
+    } catch (error) {
+      platformResponse = error.toString();
+    }
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(platformResponse),
+      ),
+    );
+  }
+
+  Future<void> _makePhoneSMS(String phoneNumber) async {
+    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
+    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
+    // such as spaces in the input, which would cause `launch` to fail on some
+    // platforms.
+    final Uri launchUri = Uri(
+      scheme: 'sms',
+      path: phoneNumber,
+    );
+    await launch(launchUri.toString());
   }
 }

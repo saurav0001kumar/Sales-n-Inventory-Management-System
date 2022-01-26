@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_drawer/fancy_drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,8 +6,12 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:sales_n_inventory_flutter_app/app_drawer/drawer.dart';
 import 'package:sales_n_inventory_flutter_app/others/customAppBar.dart';
 import 'package:sales_n_inventory_flutter_app/others/image_assets.dart';
+import 'package:sales_n_inventory_flutter_app/others/notification.dart';
+import 'package:sales_n_inventory_flutter_app/others/otherFunctions.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen2_authType.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen3_inventoryHome.dart';
+
+NotifyAlertState notify = new NotifyAlertState();
 
 FancyDrawerController _controller;
 
@@ -20,7 +25,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   @override
-  void initState() {
+  Future<void> initState() {
     super.initState();
     _controller = FancyDrawerController(
         vsync: this, duration: Duration(milliseconds: 250))

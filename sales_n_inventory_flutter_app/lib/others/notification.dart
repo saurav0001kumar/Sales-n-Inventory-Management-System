@@ -24,6 +24,7 @@ class NotifyAlertState extends State<NotifyAlert> {
     var initSetttings = new InitializationSettings(android: android, iOS: iOS);
     flutterLocalNotificationsPlugin.initialize(initSetttings,
         onSelectNotification: onSelectNotification);
+
   }
 
   Future onSelectNotification(String payload) {
@@ -31,7 +32,7 @@ class NotifyAlertState extends State<NotifyAlert> {
     showDialog(
       context: context,
       builder: (_) => new AlertDialog(
-        title: new Text('Notification'),
+        title: new Text('Notification::Inventory Alert'),
         content: new Text('$payload'),
       ),
     );
@@ -42,7 +43,7 @@ class NotifyAlertState extends State<NotifyAlert> {
     return HomeScreen();
   }
 
-  showNotification() async {
+  showNotification(int i,String payload) async {
     var android = new AndroidNotificationDetails(
         'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
         priority: Priority.high,
@@ -52,7 +53,7 @@ class NotifyAlertState extends State<NotifyAlert> {
     var iOS = new IOSNotificationDetails(sound: "sound.mp3");
     var platform = new NotificationDetails(android: android, iOS: iOS);
     await flutterLocalNotificationsPlugin.show(
-        0, 'New Event in your Area.', 'Open app to view more.', platform,
-        payload: 'Stock Empty. Open to view more details.');
+        i, 'Inventory Stock Alert!', payload, platform,
+        payload: payload);
   }
 }

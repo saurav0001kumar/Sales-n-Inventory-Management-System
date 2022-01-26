@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:sales_n_inventory_flutter_app/others/otherFunctions.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -175,24 +176,34 @@ class VendorInteractionState extends State<VendorInteraction> {
     await launch(launchUri.toString());
   }
 
-  Future<void> _sendEmail(String email, String subject, String msg){
-
-    String encodeQueryParameters(Map<String, String> params) {
-      return params.entries
-          .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
-          .join('&');
-    }
-
-    final Uri emailLaunchUri = Uri(
-      scheme: 'mailto',
-      path: email,
-      query: encodeQueryParameters(<String, String>{
-        'subject': subject,
-      }),
+  Future<void> _sendEmail(
+      String email_body, String email_subject, email_ID) async {
+    final Email email = Email(
+      body: email_body,
+      subject: email_subject,
+      recipients: [email_ID],
+      cc: [],
+      bcc: [],
+      attachmentPaths: [],
+      isHTML: false,
     );
 
-    launch(emailLaunchUri.toString());
+    String platformResponse;
 
+    try {
+      await FlutterEmailSender.send(email);
+      platformResponse = 'Success! Check your Mailbox for sent items.';
+    } catch (error) {
+      platformResponse = error.toString();
+    }
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(platformResponse),
+      ),
+    );
   }
 
 }
