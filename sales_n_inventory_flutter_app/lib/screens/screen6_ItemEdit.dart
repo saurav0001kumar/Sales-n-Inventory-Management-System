@@ -11,6 +11,9 @@ var categoryTC = new TextEditingController();
 var brandTC = new TextEditingController();
 var pricePerItemTC = new TextEditingController();
 var quantityTC = new TextEditingController();
+var vendor_nameTC = new TextEditingController();
+var vendor_emailTC = new TextEditingController();
+var vendor_phoneTC = new TextEditingController();
 
 var previousQuantity = 0;
 
@@ -43,6 +46,10 @@ class editItemState extends State<editItem> {
       brandTC.text = data['brand'];
       pricePerItemTC.text = data['price_per_item'].toString();
       quantityTC.text = data['quantity'].toString();
+      vendor_nameTC.text = data['vendor_name'].toString();
+      vendor_emailTC.text = data['vendor_email'].toString();
+      vendor_phoneTC.text = data['vendor_phone'].toString();
+
       previousQuantity = data['quantity'];
     });
   }
@@ -215,6 +222,68 @@ class editItemState extends State<editItem> {
                 },
               ),
             ),
+
+            Padding(
+              padding:
+              const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+              child: TextFormField(
+                controller: vendor_nameTC,
+                keyboardType: TextInputType.text,
+                textCapitalization: TextCapitalization.words,
+                decoration: InputDecoration(
+                  labelText: 'Vendor Name',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(0)),
+                ),
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return '*';
+                  }
+                  return null;
+                },
+              ),
+            ),
+            Padding(
+              padding:
+              const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+              child: TextFormField(
+                controller: vendor_emailTC,
+                keyboardType: TextInputType.text,
+                textCapitalization: TextCapitalization.none,
+                decoration: InputDecoration(
+                  labelText: 'Vendor Email',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(0)),
+                ),
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return '*';
+                  }
+                  return null;
+                },
+              ),
+            ),
+            Padding(
+              padding:
+              const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+              child: TextFormField(
+                controller: vendor_phoneTC,
+                keyboardType: TextInputType.number,
+                textCapitalization: TextCapitalization.none,
+                decoration: InputDecoration(
+                  labelText: 'Vendor Contact',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(0)),
+                ),
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return '*';
+                  }
+                  return null;
+                },
+              ),
+            ),
+
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 100.0, vertical: 10),
@@ -246,6 +315,10 @@ class editItemState extends State<editItem> {
       'brand': brandTC.text,
       'price_per_item': int.parse(pricePerItemTC.text),
       'quantity': int.parse(quantityTC.text),
+      'vendor_name': vendor_nameTC.text,
+      'vendor_email': vendor_emailTC.text,
+      'vendor_phone': vendor_phoneTC.text,
+
       'date_modified': DateTime.now(),
       'recently_added_items':
           (int.parse(quantityTC.text) - previousQuantity),

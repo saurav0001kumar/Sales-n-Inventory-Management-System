@@ -187,7 +187,7 @@ class removeExistingProductScreenState
         height: MediaQuery.of(context).size.height * 0.18,
       ),
       Padding(
-          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
           child: StreamBuilder<QuerySnapshot>(
               stream: Stocks.snapshots(includeMetadataChanges: true),
               builder: (BuildContext context,
@@ -248,207 +248,334 @@ class removeExistingProductScreenState
                           return Column(
                             children: [
                               Container(),
-                              Card(
-                                elevation: 1,
-                                color: d.data()['quantity'] > 5
-                                    ? Colors.lightBlue[50]
-                                    : (d.data()['quantity'] <= 0
-                                        ? Colors.red[50]
-                                        : Colors.amber[50]),
-                                child: ListTile(
-                                  title: Text(
-                                    d.data()['item_name'],
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18),
-                                  ),
-                                  trailing: GestureDetector(
-                                      onTap: () {
-                                        //to delete product
-                                        removeProduct(
-                                            d.id, d.data()['item_name']);
-                                      },
-                                      child: CircleAvatar(
-                                        backgroundColor: Colors.white,
-                                        child: Icon(Icons.delete_forever,
-                                            color: Colors.red),
-                                      )),
-                                  subtitle: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Category: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                          Text(
-                                            d.data()['category'],
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Brand: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                          Text(
-                                            d.data()['brand'],
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Rate (INR): ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                          Text(
-                                            "₹ " +
-                                                d
-                                                    .data()['price_per_item']
-                                                    .toString(),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Quantity: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                          Text(
-                                            d.data()['quantity'].toString(),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                              Stack(children: [
+                                Card(
+                                  elevation: 1,
+                                  color: d.data()['quantity'] > 5
+                                      ? Colors.lightBlue[50]
+                                      : (d.data()['quantity'] <= 0
+                                          ? Colors.red[50]
+                                          : Colors.amber[50]),
+                                  child: ListTile(
+                                    title: Text(
+                                      d.data()['item_name'],
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
+                                    ),
+                                    subtitle: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Category: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                            Text(
+                                              d.data()['category'],
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Brand: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                            Text(
+                                              d.data()['brand'],
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Rate (INR): ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                            Text(
+                                              "₹ " +
+                                                  d
+                                                      .data()['price_per_item']
+                                                      .toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Quantity: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                            Text(
+                                              d.data()['quantity'].toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Vendor Name: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                            Text(
+                                              d
+                                                  .data()['vendor_name']
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Vendor Email: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                            Text(
+                                              d
+                                                  .data()['vendor_email']
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Vendor Contact: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                            Text(
+                                              d
+                                                  .data()['vendor_phone']
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          //to delete product
+                                          removeProduct(
+                                              d.id, d.data()['item_name']);
+                                        },
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.white,
+                                          child: Icon(Icons.delete_forever,
+                                              color: Colors.red),
+                                        )),
+                                  ),
+                                ),
+                              ]),
                             ],
                           );
                         else if (d.data()['category'] == selectedCategory)
                           return Column(
                             children: [
                               Container(),
-                              Card(
-                                elevation: 1,
-                                color: d.data()['quantity'] > 5
-                                    ? Colors.lightBlue[50]
-                                    : (d.data()['quantity'] <= 0
-                                        ? Colors.red[50]
-                                        : Colors.amber[50]),
-                                child: ListTile(
-                                  title: Text(
-                                    d.data()['item_name'],
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18),
-                                  ),
-                                  trailing: GestureDetector(
-                                      onTap: () {
-                                        //to delete product
-                                        removeProduct(
-                                            d.id, d.data()['item_name']);
-                                      },
-                                      child: CircleAvatar(
-                                        backgroundColor: Colors.white,
-                                        child: Icon(Icons.delete_forever,
-                                            color: Colors.red),
-                                      )),
-                                  subtitle: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Category: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                          Text(
-                                            d.data()['category'],
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                        ],
+                              Stack(
+                                children: [
+                                  Card(
+                                    elevation: 1,
+                                    color: d.data()['quantity'] > 5
+                                        ? Colors.lightBlue[50]
+                                        : (d.data()['quantity'] <= 0
+                                            ? Colors.red[50]
+                                            : Colors.amber[50]),
+                                    child: ListTile(
+                                      title: Text(
+                                        d.data()['item_name'],
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18),
                                       ),
-                                      Row(
+                                      subtitle: Column(
                                         children: [
-                                          Text(
-                                            "Brand: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Category: ",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                              Text(
+                                                d.data()['category'],
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                            ],
                                           ),
-                                          Text(
-                                            d.data()['brand'],
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Brand: ",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                              Text(
+                                                d.data()['brand'],
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Rate (INR): ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Rate (INR): ",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                              Text(
+                                                "₹ " +
+                                                    d
+                                                        .data()[
+                                                            'price_per_item']
+                                                        .toString(),
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                            ],
                                           ),
-                                          Text(
-                                            "₹ " +
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Quantity: ",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                              Text(
+                                                d.data()['quantity'].toString(),
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Vendor Name: ",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                              Text(
                                                 d
-                                                    .data()['price_per_item']
+                                                    .data()['vendor_name']
                                                     .toString(),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Vendor Email: ",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                              Text(
+                                                d
+                                                    .data()['vendor_email']
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Vendor Contact: ",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                              Text(
+                                                d
+                                                    .data()['vendor_phone']
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Quantity: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                          Text(
-                                            d.data()['quantity'].toString(),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: GestureDetector(
+                                          onTap: () {
+                                            //to delete product
+                                            removeProduct(
+                                                d.id, d.data()['item_name']);
+                                          },
+                                          child: CircleAvatar(
+                                            backgroundColor: Colors.white,
+                                            child: Icon(Icons.delete_forever,
+                                                color: Colors.red),
+                                          )),
+                                    ),
+                                  )
+                                ],
                               ),
                             ],
                           );

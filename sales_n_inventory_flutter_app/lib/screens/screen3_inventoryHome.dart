@@ -8,8 +8,17 @@ import 'package:sales_n_inventory_flutter_app/app_drawer/drawer.dart';
 import 'package:sales_n_inventory_flutter_app/others/appBarForInventory.dart';
 import 'package:sales_n_inventory_flutter_app/others/floatingActionXS.dart';
 import 'package:sales_n_inventory_flutter_app/others/items_list.dart';
+import 'package:sales_n_inventory_flutter_app/others/otherFunctions.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen4_addNewProduct.dart';
 import 'package:sales_n_inventory_flutter_app/screens/screen5_removeExistingProduct.dart';
+import 'package:sales_n_inventory_flutter_app/screens/screen8_vendorInteraction.dart';
+
+// Query number of Vendors
+var no_of_vendors = FirebaseFirestore.instance
+    .collection('inventory_db')
+    .doc(FirebaseAuth.instance.currentUser.email.toString())
+    .collection("products");
+
 
 // -Sort by item_name-start->
 var in_Stock = FirebaseFirestore.instance
@@ -129,6 +138,7 @@ class _InventoryDashboardState extends State<InventoryDashboard>
                   DateTime.now().subtract(Duration(days: 30)));
     });
     //
+    getVendors();
   }
 
   @override
@@ -232,6 +242,21 @@ class _InventoryDashboardState extends State<InventoryDashboard>
               ));
     }
   }
+
+  void getVendors() {
+    FirebaseFirestore.instance
+        .collection('inventory_db')
+        .doc(FirebaseAuth.instance.currentUser.email.toString())
+        .collection("products")
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        setState(() {
+          vendors.add(doc['vendor_name']);
+        });
+      });
+    });
+  }
 }
 
 Widget bodyForInventoryDashboard(context) {
@@ -240,6 +265,63 @@ Widget bodyForInventoryDashboard(context) {
       SizedBox(
         height: MediaQuery.of(context).size.height * 0.18,
       ),
+
+      //Vendor Interaction
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2.5, horizontal: 10),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => VendorInteraction()));
+          },
+          child: Card(
+            elevation: 1,
+            color: Colors.purple[50],
+            child: Container(
+              height: 140,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    child: Icon(
+                      Icons.precision_manufacturing,
+                      size: 70,
+                      color: Colors.purple,
+                    ),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                        text: (vendors.length-1).toString()+"\n",
+                        style: TextStyle(
+                            color: Colors.purpleAccent,
+                            fontFamily: "GoogleSans",
+                            fontSize: 37,
+                            fontWeight: FontWeight.bold),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: "Vendor/Manufacturer\nInteraction",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.deepPurple,
+                                  fontFamily: "GoogleSans",
+                                  fontSize: 20)),
+                        ]),
+                  ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+
       //Products IN STOCK
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 2.5, horizontal: 10),
@@ -586,4 +668,5 @@ Widget bodyForInventoryDashboard(context) {
       ),
     ],
   );
+
 }

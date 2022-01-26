@@ -32,6 +32,9 @@ var categoryTC = new TextEditingController();
 var brandTC = new TextEditingController();
 var pricePerItemTC = new TextEditingController();
 var quantityTC = new TextEditingController();
+var vendor_nameTC = new TextEditingController();
+var vendor_emailTC = new TextEditingController();
+var vendor_phoneTC = new TextEditingController();
 
 var date_modified;
 var recently_added_items = 0;
@@ -292,6 +295,66 @@ class addNewProductScreenState extends State<addNewProductScreen> {
               ),
               Padding(
                 padding:
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                child: TextFormField(
+                  controller: vendor_nameTC,
+                  keyboardType: TextInputType.text,
+                  textCapitalization: TextCapitalization.words,
+                  decoration: InputDecoration(
+                    labelText: 'Vendor Name',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(0)),
+                  ),
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return '*';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Padding(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                child: TextFormField(
+                  controller: vendor_emailTC,
+                  keyboardType: TextInputType.emailAddress,
+                  textCapitalization: TextCapitalization.none,
+                  decoration: InputDecoration(
+                    labelText: 'Vendor Email',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(0)),
+                  ),
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return '*';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Padding(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                child: TextFormField(
+                  controller: vendor_phoneTC,
+                  keyboardType: TextInputType.number,
+                  textCapitalization: TextCapitalization.none,
+                  decoration: InputDecoration(
+                    labelText: 'Vendor Contact',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(0)),
+                  ),
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return '*';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Padding(
+                padding:
                     const EdgeInsets.symmetric(horizontal: 100.0, vertical: 10),
                 child: ElevatedButton.icon(
                   label: Text("Add New"),
@@ -325,6 +388,9 @@ class addNewProductScreenState extends State<addNewProductScreen> {
       'quantity': int.parse(quantityTC.text),
       'date_modified': DateTime.now(),
       'recently_added_items': int.parse(quantityTC.text),
+      'vendor_name': vendor_nameTC.text,
+      'vendor_email': vendor_emailTC.text,
+      'vendor_phone': vendor_phoneTC.text
     }).then((value) {
       inventory_last_updated_on();
       setState(() {
@@ -344,6 +410,9 @@ class addNewProductScreenState extends State<addNewProductScreen> {
       brandTC.clear();
       pricePerItemTC.clear();
       quantityTC.clear();
+      vendor_nameTC.clear();
+      vendor_emailTC.clear();
+      vendor_phoneTC.clear();
     });
   }
 
@@ -419,6 +488,9 @@ class addNewProductScreenState extends State<addNewProductScreen> {
       brandTC.text = _scanBarcode.split(",")[2];
       pricePerItemTC.text = _scanBarcode.split(",")[3];
       quantityTC.text = _scanBarcode.split(",")[4];
+      vendor_nameTC.text= _scanBarcode.split(",")[5];
+      vendor_emailTC.text= _scanBarcode.split(",")[6];
+      vendor_phoneTC.text= _scanBarcode.split(",")[7];
     });
   }
 }
