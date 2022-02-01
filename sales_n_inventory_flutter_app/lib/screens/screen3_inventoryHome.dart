@@ -442,6 +442,7 @@ Widget bodyForInventoryDashboard(context) {
                                   ]);
                             }
 
+                            if(snapshot.data.size!=0)
                             notify.showNotification(
                                 1,
                                 "You have " +
@@ -530,6 +531,7 @@ Widget bodyForInventoryDashboard(context) {
                             }
                             OutStocks = snapshot.data.size;
 
+                            if(snapshot.data.size!=0)
                             notify.showNotification(
                                 0,
                                 "You have " +
