@@ -247,7 +247,15 @@ class _InventoryDashboardState extends State<InventoryDashboard>
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         setState(() {
-          vendors.add(doc['vendor_name']);
+          if(!vendors.contains(doc['vendor_name'].toString()))
+          {
+            if(doc['vendor_name']!=null)
+              {
+                vendors.add(doc['vendor_name'].toString());
+                vendor_phones.add(doc['vendor_phone'].toString());
+                vendor_emails.add(doc['vendor_email'].toString());
+              }
+          }
         });
       });
     });
@@ -291,9 +299,9 @@ Widget bodyForInventoryDashboard(context) {
                     child: RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
-                          text: vendors.length == 1
+                          text: vendors.length == 0
                               ? ""
-                              : (vendors.length - 1).toString() + "\n",
+                              : (vendors.length).toString() + "\n",
                           style: TextStyle(
                               color: Colors.purpleAccent,
                               fontFamily: "GoogleSans",

@@ -5,12 +5,6 @@ import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:sales_n_inventory_flutter_app/others/otherFunctions.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-var Stocks = FirebaseFirestore.instance
-    .collection('inventory_db')
-    .doc(FirebaseAuth.instance.currentUser.email.toString())
-    .collection("products")
-    .orderBy('item_name');
-
 class VendorInteraction extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => VendorInteractionState();
@@ -23,13 +17,6 @@ class VendorInteractionState extends State<VendorInteraction> {
   void initState() {
     super.initState();
     getVendors();
-    setState(() {
-      Stocks = FirebaseFirestore.instance
-          .collection('inventory_db')
-          .doc(FirebaseAuth.instance.currentUser.email.toString())
-          .collection("products")
-          .orderBy('item_name');
-    });
   }
 
   @override
@@ -96,7 +83,7 @@ class VendorInteractionState extends State<VendorInteraction> {
                   child: Column(
                     children: [
                       Text(
-                        (vendors.length - 1).toString(),
+                        (vendors.length).toString(),
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 28,
@@ -116,40 +103,103 @@ class VendorInteractionState extends State<VendorInteraction> {
               SizedBox(
                 height: 20,
               ),
-
-              GestureDetector(
-                onTap: (){
-
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+              for (int i = 0; i < vendors.length; i++)
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
                   child: Card(
-                    elevation: 2,
+                    elevation: 0.5,
+                    color: Colors.blue[50],
                     child: ListTile(
-
-                      leading: CircleAvatar(radius:30,child: Icon(Icons.person, size: 30,),),
+                      leading: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 15,
+                          child: Text(
+                            (i + 1).toString(),
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          )),
+                      title: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          vendors[i],
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18,
+                              color: Colors.deepPurple),
+                        ),
+                      ),
+                      subtitle: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    _makePhoneCall(vendor_phones[i]);
+                                  },
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    child: Chip(
+                                      elevation: 1,
+                                      backgroundColor: Colors.white,
+                                      label: Icon(
+                                        Icons.phone,
+                                        color: Colors.indigo,
+                                        size: 30,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    _makePhoneSMS(vendor_phones[i]);
+                                  },
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    child: Chip(
+                                      elevation: 1,
+                                      backgroundColor: Colors.white,
+                                      label: Icon(
+                                        Icons.message,
+                                        color: Colors.indigo,
+                                        size: 30,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    _sendEmail("", "", vendor_emails[i]);
+                                  },
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    child: Chip(
+                                      elevation: 1,
+                                      backgroundColor: Colors.white,
+                                      label: Icon(
+                                        Icons.mail,
+                                        color: Colors.indigo,
+                                        size: 30,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              )
+                )
             ],
           ))
     ]);
-  }
-
-  void getVendors() {
-    FirebaseFirestore.instance
-        .collection('inventory_db')
-        .doc(FirebaseAuth.instance.currentUser.email.toString())
-        .collection("products")
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
-        setState(() {
-          vendors.add(doc['vendor_name']);
-        });
-      });
-    });
   }
 
   Future<void> _makePhoneCall(String phoneNumber) async {
@@ -206,4 +256,26 @@ class VendorInteractionState extends State<VendorInteraction> {
     );
   }
 
+  //Method for displaying Vendors List
+
+  void getVendors() {
+    FirebaseFirestore.instance
+        .collection('inventory_db')
+        .doc(FirebaseAuth.instance.currentUser.email.toString())
+        .collection("products")
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        setState(() {
+          if (!vendors.contains(doc['vendor_name'].toString())) {
+            if (doc['vendor_name'] != null) {
+              vendors.add(doc['vendor_name'].toString());
+              vendor_phones.add(doc['vendor_phone'].toString());
+              vendor_emails.add(doc['vendor_email'].toString());
+            }
+          }
+        });
+      });
+    });
+  }
 }
