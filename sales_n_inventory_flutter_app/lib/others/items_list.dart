@@ -570,12 +570,19 @@ class ItemsListState extends State<ItemsList> {
                                                   const EdgeInsets.fromLTRB(
                                                       10, 0, 10, 0),
                                               child: Chip(
-                                                elevation: 1,
+                                                elevation: 2,
                                                 backgroundColor: Colors.white,
-                                                label: Icon(
-                                                  Icons.mail,
-                                                  color: color1,
-                                                  size: 30,
+                                                label: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.shopping_cart,
+                                                      color: color1,
+                                                      size: 33,
+                                                    ),
+                                                    Text("Order Now",
+                                                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                             ),
@@ -916,12 +923,19 @@ class ItemsListState extends State<ItemsList> {
                                                   const EdgeInsets.fromLTRB(
                                                       10, 0, 10, 0),
                                               child: Chip(
-                                                elevation: 1,
+                                                elevation: 2,
                                                 backgroundColor: Colors.white,
-                                                label: Icon(
-                                                  Icons.mail,
-                                                  color: color1,
-                                                  size: 30,
+                                                label: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.shopping_cart,
+                                                      color: color1,
+                                                      size: 30,
+                                                    ),
+                                                    Text("Order Now",
+                                                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                             ),
